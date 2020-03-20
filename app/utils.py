@@ -9,7 +9,7 @@ def parse(keyword):
 	return keyword
 
 
-def alert(receiver_email):
+def send_alert(receiver_email):
 	port = 587
 	smtp_server = "smtp.gmail.com"
 	sender_email = "some_bot@gmail.com" # To-do: Make an account
@@ -34,7 +34,7 @@ def alert(receiver_email):
 	finally:
 		server.quit()
 
-
+# To-do: Implement 1) threshold and 2) price drop features
 def check_price(table, threshold):
 	bool_idx = table['price'] < threshold
 	if sum(bool_idx):
