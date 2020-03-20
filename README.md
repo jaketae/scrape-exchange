@@ -34,11 +34,32 @@ conda env create -f environment.yml
 conda activate exchange-scrape
 ```
 
-The `demo` script can be used to test run the application. To run, type
+The `demo.py` script can be used to test run the application. To run, type
 
 ```bash
 python -m demo
 ```
 
 You will be asked to input a product. The program will print a table listing the first twelve product entries matching your search keyword along with their respective prices. 
+
+## Example
+
+Below is a sample demonstration of the application using the keyword `ipad pro`. 
+
+```bash
+Which product are you interested in? ipad pro
+                                        names     prices
+0    Apple iPad Pro 12.9 in. 512GB with WiFi   $1,339.00
+1      Apple iPad Pro 12.9 in. 1TB with WiFi   $1,549.00
+2       Apple iPad Pro 11 in. 64GB with WiFi     $739.00
+3      Apple iPad Pro 11 in. 256GB with WiFi     $938.00
+4        Apple iPad Pro 11 in. 1TB with WiFi   $1,349.00
+5   Apple iPad Pro 12.9 in. 256GB with Wi-Fi   $1,139.00
+6    Apple iPad Pro 12.9 in. 64GB with Wi-Fi     $989.00
+7      Apple iPad Pro 11 in. 512GB with WiFi   $1,139.00
+8    Apple iPad Air 10.5 in. 256GB with WiFi     $549.00
+9            Apple iPad mini 256GB with WiFi     $499.00
+10            Apple iPad mini 64GB with WiFi     $389.00
+11    Apple iPad Air 10.5 in. 64GB with WiFi     $399.00
+```
 
