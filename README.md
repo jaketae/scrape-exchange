@@ -15,8 +15,8 @@ Known Bugs:
 - "Log in for Exchange pricing" hinders scraping
 
 Features to Come:
-- Build a GUI that allows users to input and save items in a wish list
 - Inform the user via email whenever a price change occurs for any given item in the wish list
+- Allow users to narrow down their search (*e.g.* prevent airpods cases from showing up)
 
 ## Usage
 
