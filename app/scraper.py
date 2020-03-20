@@ -1,7 +1,7 @@
 import bs4
 import requests
 import pandas as pd
-from utils import parse
+from app.utils import parse
 
 class Scraper:
 
@@ -9,7 +9,7 @@ class Scraper:
 		keyword = parse(keyword)
 		url ='https://www.shopmyexchange.com/s?Dy=1&Nty=1&Ntt=' + keyword
 		page = requests.get(url)
-		self.soup = bs4.BeautifulSoup(page.text)
+		self.soup = bs4.BeautifulSoup(page.text, 'html.parser')
 		# self.soup = bs4.BeautifulSoup(page.text, 'lxml')
 
 	def _scrape_names(self):
