@@ -4,7 +4,7 @@ This is a simple web scraper that crawls the [PX Exchange](http://www.shopmyexch
 
 ## Motivation
 
-The website sporadically offers sales on many items---in most cases without prior notice---which is why it is often difficult for people to purchase items that they want at the cheapest price possible. When people hear about ongoing sales, they often realize that the sale has already expired, and that they are late to the game.
+The Exchange often holds bulk sales on multiple items without prior notice, making it difficult for people to purchase items at their cheapest price points. When people hear about ongoing sales and browse the website, they often realize to their dismay that the sale has already expired. 
 
 ## Functionality
 
