@@ -12,6 +12,7 @@ As it stands, the program is able to scrape contents of the Exchange website giv
 
 Known Bugs:
 - The scraper fails when an item is sold out
+- "Log in for Exchange pricing" hinders scraping
 
 Features to Come:
 - Build a GUI that allows users to input and save items in a wish list
