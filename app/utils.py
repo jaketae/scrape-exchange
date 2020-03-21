@@ -5,7 +5,7 @@ import smtplib
 
 
 def parse(keyword):
-	keyword = keyword.replace(' ', '&')
+	keyword = keyword.replace(' ', '+')
 	return keyword
 
 
