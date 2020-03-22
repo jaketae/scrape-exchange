@@ -43,4 +43,4 @@ class Scraper:
 		prices = self._scrape_prices()
 		assert len(names) == len(prices)
 		summary = pd.DataFrame({"names": names, "prices": prices})
-		return summary.to_string()
+		return summary

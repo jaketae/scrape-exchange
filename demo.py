@@ -4,8 +4,7 @@ from app.scraper import Scraper
 def main():
 	keyword = input("Which product are you interested in? ")
 	scraper = Scraper(keyword)
-	scraper.scrape()
-	print(scraper.summary)
+	print(scraper.scrape())
 
 if __name__ == '__main__':
 	main()
