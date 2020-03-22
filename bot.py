@@ -1,8 +1,6 @@
 import os
 from flask import Flask, request
 from pymessenger.bot import Bot
-# from app.scraper import Scraper
-
 
 app = Flask(__name__)
 ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
@@ -13,10 +11,8 @@ bot = Bot(ACCESS_TOKEN)
 @app.route('/', methods=['GET', 'POST'])
 def receive_message():
     if request.method == 'GET':
-        if request.args.get("hub.verify_token") == VERIFY_TOKEN:
-            return request.args.get("hub.challenge")
-        else:
-            return 'Invalid verification token'
+        token_sent = request.args.get("hub.verify_token")
+        return verify_fb_token(token_sent)
     else:
         output = request.get_json()
         for event in output['entry']:
@@ -24,12 +20,21 @@ def receive_message():
             for message in messaging:
                 if message.get('message'):
                     recipient_id = message['sender']['id']
-                    keyword = message['message']['text']
-                    # scraper = Scraper(keyword)
-                    # scraper.scrape()
-                    # table = scraper.scrape()
-                    bot.send_text_message(recipient_id, "This is a test.")
+                    # response_sent_text = get_message()
+                    response_sent_text = "This is a test response."
+                    send_message(recipient_id, response_sent_text)
         return "Message Processed"
+
+
+def verify_fb_token(token_sent):
+    if token_sent == VERIFY_TOKEN:
+        return request.args.get("hub.challenge")
+    return 'Invalid verification token'
+
+
+def send_message(recipient_id, response):
+    bot.send_text_message(recipient_id, response)
+    return "success"
 
 
 if __name__ == "__main__":
