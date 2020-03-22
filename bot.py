@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request
 from pymessenger.bot import Bot
+from app.scraper import Scraper
 
 app = Flask(__name__)
 ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
@@ -22,8 +23,10 @@ def receive_message():
             for message in messaging:
                 if message.get('message'):
                     recipient_id = message['sender']['id']
-                    response_sent_text = "This is a test response."
-                    bot.send_text_message(recipient_id, response_sent_text)
+                    keyword = message['message']['text']
+                    scraper = Scraper(keyword)
+                    price_table = scraper.scrape()
+                    bot.send_text_message(recipient_id, price_table)
         return "Message Processed"
 
 

@@ -12,7 +12,7 @@ class Scraper:
 		keyword = parse(keyword)
 		url ='https://www.shopmyexchange.com/s?Dy=1&Nty=1&Ntt=' + keyword
 		page = requests.get(url)
-		self.soup = bs4.BeautifulSoup(page.text, 'lxml')
+		self.soup = bs4.BeautifulSoup(page.text, 'html.parser')
 
 
 	def _scrape_names(self):
