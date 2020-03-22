@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request
 from pymessenger.bot import Bot
-from app.scraper import Scraper
+# from app.scraper import Scraper
 
 
 app = Flask(__name__)
@@ -25,10 +25,10 @@ def receive_message():
                 if message.get('message'):
                     recipient_id = message['sender']['id']
                     keyword = message['message']['text']
-                    scraper = Scraper(keyword)
-                    scraper.scrape()
-                    table = scraper.scrape()
-                    bot.send_text_message(recipient_id, table)
+                    # scraper = Scraper(keyword)
+                    # scraper.scrape()
+                    # table = scraper.scrape()
+                    bot.send_text_message(recipient_id, "This is a test.")
         return "Message Processed"
 
 
