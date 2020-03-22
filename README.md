@@ -1,6 +1,6 @@
-# Exchange Web Scraper
+# PX Exchange Chatbot
 
-This is a simple web scraper that crawls the [PX Exchange](http://www.shopmyexchange.com), a shopping website for U.S. soldiers and veterans. 
+This is a simple web scraper-turned-chatbot for [PX Exchange](http://www.shopmyexchange.com), a shopping website for U.S. soldiers and veterans. The chatbot, which runs on Facebook's Messenger platform, provides a convenient way for users to inquire about product prices and price changes on a real-time basis.
 
 ## Motivation
 
@@ -18,6 +18,7 @@ Fixed Bugs (v.2020.03.21):
 - "Log in for Exchange pricing" hinders scraping
 
 Features to Come:
+- Integrate the bot into Facebook Messenger for easier access
 - Inform the user via email whenever a price change occurs for any given item in the wish list
 - Allow users to narrow down their search (*e.g.* prevent airpods cases from showing up)
 
@@ -29,6 +30,7 @@ As it stands, the application requires the following dependencies:
 bs4
 pandas
 requests
+pymessenger
 ```
 
 Clone the repository and first run the following command on the shell to create a Conda virutal environment installed with the dependencies listed above. Then, activate the environment.
@@ -91,3 +93,4 @@ Which product are you interested in? ipad pro
 35                                 Apple AirPods Pro                       $248.00
 ```
 
+Documentation for the updated chatbot coming soon!
