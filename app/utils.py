@@ -12,8 +12,9 @@ def parse(keyword):
 def send_alert(receiver_email):
 	port = 587
 	smtp_server = "smtp.gmail.com"
-	sender_email = "backupdrive199@gmail.com"
-	sender_password = "backitup"
+	# To-do: Create bot email account
+	sender_email = "some_email@gmail.com"
+	sender_password = "some_password"
 	# To-do: Add more info to email
 	message = """\
 	Subject: Price alert
