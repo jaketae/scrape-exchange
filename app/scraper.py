@@ -10,7 +10,7 @@ class Scraper:
 
 	def __init__(self, keyword):
 		keyword = parse(keyword)
-		url ='https://www.shopmyexchange.com/s?Dy=1&Nty=1&Ntt=' + keyword
+		url = f'https://www.shopmyexchange.com/s?Dy=1&Nty=1&Ntt={keyword}'
 		page = requests.get(url)
 		self.soup = bs4.BeautifulSoup(page.text, 'lxml')
 
@@ -32,12 +32,14 @@ class Scraper:
 				try:
 					price = item.find("div", {"class": "aafes-price"}).text.strip()
 				except:
-					price = item.find("div", {"class": "aafes-price-sm"}).text.strip()
+					try:
+						price = item.find("div", {"class": "aafes-price-sm"}).text.strip()
+					except:
+						price = 'None'
 			prices.append(price)
 		return prices
 
-	# To-do: Only show valid entries
-	# (i.e. Exclude "Coming soon")
+
 	def scrape(self):
 		names = self._scrape_names()
 		prices = self._scrape_prices()
