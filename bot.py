@@ -24,8 +24,6 @@ def receive_message():
                 if message.get('message'):
                     recipient_id = message['sender']['id']
                     keyword = message['message']['text']
-                    default_msg = "Here are the results for {}.".format(keyword)
-                    bot.send_text_message(recipient_id, default_msg)
                     scraper = Scraper(keyword)
                     summary = scraper.scrape()
                     bot.send_raw(recipient_id, summary)
