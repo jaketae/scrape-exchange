@@ -21,12 +21,6 @@ def organize(names, prices):
         if price[0] == '$':
             price_record[name] = price
     return price_record
-
-def priceTracker(name, table):
-    while True:
-        if table[name] > 
-        time.sleep(7 * 24 * 60 * 60)
-        
         
     
                          
