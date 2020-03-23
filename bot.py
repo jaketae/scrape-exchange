@@ -26,8 +26,15 @@ def receive_message():
                     keyword = message['message']['text']
                     scraper = Scraper(keyword)
                     summary = scraper.scrape()
+                    
                     bot.send_text_message(recipient_id, summary)
         return "Message Processed"
+
+# checks if the price dropped for a certain item every week?
+def priceTracker():
+    while True:
+        
+    
 
 
 if __name__ == "__main__":
