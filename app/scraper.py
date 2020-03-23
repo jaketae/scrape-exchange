@@ -1,6 +1,7 @@
 import bs4
 import requests
-import pandas as pd
+import json
+from collections import OrderedDict
 from app.utils import parse
 
 
@@ -12,7 +13,7 @@ class Scraper:
 		keyword = parse(keyword)
 		url ='https://www.shopmyexchange.com/s?Dy=1&Nty=1&Ntt=' + keyword
 		page = requests.get(url)
-		self.soup = bs4.BeautifulSoup(page.text, 'html.parser')
+		self.soup = bs4.BeautifulSoup(page.text, 'lxml')
 
 
 	def _scrape_names(self):
@@ -41,6 +42,6 @@ class Scraper:
 	def scrape(self):
 		names = self._scrape_names()
 		prices = self._scrape_prices()
-		assert len(names) == len(prices)
-		summary = pd.DataFrame({"names": names, "prices": prices})
-		return summary
+		summary = [OrderedDict([('Name', name), ('Price', price)]) for name, price in zip(names, prices)]
+		json_summary = json.dumps(summary)
+		return json_summary
