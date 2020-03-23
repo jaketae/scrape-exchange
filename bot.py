@@ -26,7 +26,7 @@ def receive_message():
                     keyword = message['message']['text']
                     scraper = Scraper(keyword)
                     summary = scraper.scrape()
-                    bot.send_recipient(recipient_id, summary)
+                    bot.send_text_message(recipient_id, summary)
         return "Message Processed"
 
 

@@ -1,8 +1,7 @@
 import bs4
 import requests
-import json
 from collections import OrderedDict
-from app.utils import parse
+from app.utils import parse, stringify
 
 
 
@@ -42,6 +41,5 @@ class Scraper:
 	def scrape(self):
 		names = self._scrape_names()
 		prices = self._scrape_prices()
-		summary = [OrderedDict([('Name', name), ('Price', price)]) for name, price in zip(names, prices)]
-		json_summary = json.dumps(summary)
-		return json_summary
+		summary = stringify(names, prices)
+		return summary

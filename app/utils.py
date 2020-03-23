@@ -8,6 +8,14 @@ def parse(keyword):
 	return keyword
 
 
+def stringify(names, prices):
+	result = ''
+	for name, price in zip(names, prices):
+		result += '{0}: {1}\n'.format(name, price)
+	return result
+
+
+
 def send_alert(receiver_email):
 	port = 587
 	smtp_server = "smtp.gmail.com"
