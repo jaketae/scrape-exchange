@@ -1,5 +1,3 @@
-from datetime import datetime
-
 def parse(keyword):
 	keyword = str(keyword).replace(' ', '+')
 	return keyword
@@ -17,9 +15,18 @@ def stringify(names, prices):
 			result = 'There are no results to show.'
 	return result
 
-def priceTracker(summary):
-    price_record = []
-    current_date = datetime.now();
-    price_record.append({'date': current_date, 'info': summary});
+def organize(names, prices):
+    price_record = {}
+    for name, price in zip(names, prices):
+        if price[0] == '$':
+            price_record[name] = price
+    return price_record
+
+def priceTracker(name, table):
+    while True:
+        if table[name] > 
+        time.sleep(7 * 24 * 60 * 60)
+        
+        
     
                          
