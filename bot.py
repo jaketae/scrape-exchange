@@ -44,7 +44,7 @@ def respond():
     return 'Message processed'
 
 
-@app.route('/welcome', methods=['POST'])
+@app.route('/welcome')
 def welcome():
     output = request.get_json()
     for event in output['entry']:
