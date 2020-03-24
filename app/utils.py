@@ -14,10 +14,12 @@ def concatenate(names, prices):
     else:
         for name, price in zip(names, prices):
             if price[0] == '$':
-                summary += f'{name}: {price}\n'
+                summary += f'{name}: {price}\n\n'
                 price_record[name] = price
         if len(summary) == 0:
             summary = 'There are no results to show.'
+        else:
+            summary = summary[:-1]
     return summary, price_record
 
 
