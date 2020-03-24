@@ -1,6 +1,5 @@
 import bs4
 import requests
-from collections import OrderedDict
 from app.utils import parse, concatenate
 
 
