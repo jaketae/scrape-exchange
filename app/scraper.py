@@ -8,7 +8,7 @@ from app.utils import parse, concatenate
 class Scraper:
 
 
-	def __init__(self, keyword):
+    def __init__(self, keyword):
         keyword = parse(keyword)
         url = f'https://www.shopmyexchange.com/s?Dy=1&Nty=1&Ntt={keyword}'
         page = requests.get(url)
