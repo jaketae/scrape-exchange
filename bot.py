@@ -2,6 +2,7 @@ import os
 from flask import Flask, request
 from pymessenger.bot import Bot
 from app.scraper import Scraper
+from app.utils import send_alert, check_price
 
 app = Flask(__name__)
 ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
@@ -26,16 +27,13 @@ def receive_message():
                     keyword = message['message']['text']
                     scraper = Scraper(keyword)
                     summary = scraper.scrape()
-                    
                     bot.send_text_message(recipient_id, summary)
+                    specific_item = input("Which specific product are you interested in? ")
+                    
+                    receiver_email = input("What is your email address? ")
+                    send_alert(receiver_email)
+                    
         return "Message Processed"
-
-# checks if the price dropped for a certain item every week?
-def priceTracker():
-    while True:
-        
     
-
-
 if __name__ == "__main__":
     app.run()
