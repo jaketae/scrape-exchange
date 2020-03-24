@@ -24,7 +24,7 @@ def get_started():
     request_endpoint = f'{bot.graph_url}/me/messenger_profile'
     gs_obj = {"get_started": {"payload": "get started"}}
     result = requests.post(request_endpoint, params=bot.auth_args, json=gs_obj)
-    return result.json()
+    return redirect('/welcome')
 
 
 @app.route('/', methods=['POST'])
@@ -33,18 +33,27 @@ def respond():
     for event in output['entry']:
         messaging = event['messaging']
         for message in messaging:
-            recipient_id = message['sender']['id']
-            if message.get('postback') and message["postback"]["payload"] == "get started":
-                message = 'Welcome! To begin, type the name of a product you\'re interested in.'
-                bot.send_text_message(recipient_id, message)
-            elif message.get('message'):
+            if message.get('message'):
+                recipient_id = message['sender']['id']
                 keyword = message['message']['text']
                 scraper = Scraper(keyword)
                 wait_text = 'Please wait until I get back with the results...'
                 bot.send_text_message(recipient_id, wait_text)
                 summary, _ = scraper.scrape()
                 bot.send_text_message(recipient_id, summary)
-    return 'Message Processed'
+    return 'Message processed'
+
+
+@app.route('/welcome', methods=['POST'])
+def welcome():
+    output = request.get_json()
+    for event in output['entry']:
+        messaging = event['messaging']
+        for message in messaging:
+            if message.get('postback') and message["postback"]["payload"] == "get started":
+                message = 'Welcome! To begin, type the name of a product you\'re interested in.'
+                bot.send_text_message(recipient_id, message)
+    return 'Prompt sent'
 
 
 if __name__ == '__main__':
