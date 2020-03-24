@@ -8,19 +8,12 @@ app = Flask(__name__)
 ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
 VERIFY_TOKEN = os.environ['VERIFY_TOKEN']
 bot = Bot(ACCESS_TOKEN)
+gs_obj = {"get_started": {"payload": "get started"}}
+bot.set_get_started(gs_obj)
 
 
-@app.route('/')
-def get_started():
-    gs_obj = {"get_started": {
-        "payload": "Welcome! Please type the name of a product you're interested in."}}
-    bot.set_get_started(gs_obj)
-    bot.remove_get_started()
-    return redirect('/summary')
-
-
-@app.route('/summary', methods=['GET', 'POST'])
-def send_summary():
+@app.route('/', methods=['GET', 'POST'])
+def index():
     if request.method == 'GET':
         if request.args.get("hub.verify_token") == VERIFY_TOKEN:
             return request.args.get("hub.challenge")
@@ -31,19 +24,17 @@ def send_summary():
         for event in output['entry']:
             messaging = event['messaging']
             for message in messaging:
-                if message.get('message'):
-                    recipient_id = message['sender']['id']
+                recipient_id = message['sender']['id']
+                if message.get('postback') and message["postback"]["payload"] == "get started":
+                    message = 'Welcome! To begin, type the name of a product you\'re interested in.'
+                    bot.send_text_message(recipient_id, message)
+                elif message.get('message'):
                     keyword = message['message']['text']
-                    prompt = 'Choose from the following options.'
-                    buttons = [{
-                        "type": "postback",
-                        "title": "Send me the price!",
-                        "payload": "<STRING_SENT_TO_WEBHOOK>"
-                    }]
-                    bot.send_button_message(recipient_id, prompt, buttons)
-                    # scraper = Scraper(keyword)
-                    # summary, _ = scraper.scrape()
-                    # bot.send_text_message(recipient_id, summary)
+                    scraper = Scraper(keyword)
+                    wait_text = 'Please wait until I get back with the results...'
+                    bot.send_text_message(recipient_id, wait_text)
+                    summary, _ = scraper.scrape()
+                    bot.send_text_message(recipient_id, summary)
         return 'Message Processed'
 
 
