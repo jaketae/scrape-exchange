@@ -27,10 +27,10 @@ def receive_message():
                     recipient_id = message['sender']['id']
                     keyword = message['message']['text']
                     scraper = Scraper(keyword)
-                    summary, _ = scraper.scrape()
+                    summary = scraper.scrape()
                     bot.send_text_message(recipient_id, summary)
-        return "Message Processed"
+        return 'Message Processed'
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run()

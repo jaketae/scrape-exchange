@@ -8,11 +8,11 @@ from app.utils import parse, concatenate
 class Scraper:
 
 
-	def __init__(self, keyword):
-        keyword = parse(keyword)
-        url = f'https://www.shopmyexchange.com/s?Dy=1&Nty=1&Ntt={keyword}'
-        page = requests.get(url)
-        self.soup = bs4.BeautifulSoup(page.text, 'lxml')
+    def __init__(self, keyword):
+    	keyword = parse(keyword)
+    	url = f'https://www.shopmyexchange.com/s?Dy=1&Nty=1&Ntt={keyword}'
+    	page = requests.get(url)
+    	self.soup = bs4.BeautifulSoup(page.text, 'lxml')
 
 
     def _scrape_names(self):
@@ -43,5 +43,5 @@ class Scraper:
     def scrape(self):
         names = self._scrape_names()
         prices = self._scrape_prices()
-        summary, price_record = concatenate(names, prices)
-        return summary, price_record
+        summary = concatenate(names, prices)
+        return summary
