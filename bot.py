@@ -34,11 +34,13 @@ def respond():
                 bot.send_text_message(recipient_id, message)
             elif message.get('message'):
                 keyword = message['message']['text']
-                scraper = Scraper(keyword)
-                wait_text = 'Please wait until I get back with the results...'
-                bot.send_text_message(recipient_id, wait_text)
-                summary, _ = scraper.scrape()
-                bot.send_text_message(recipient_id, summary)
+                debug_msg = f'You typed {keyword}'
+                bot.send_text_message(recipient_id, debug_msg)
+                # scraper = Scraper(keyword)
+                # wait_text = 'Please wait until I get back with the results...'
+                # bot.send_text_message(recipient_id, wait_text)
+                # summary, _ = scraper.scrape()
+                # bot.send_text_message(recipient_id, summary)
     return 'Message processed'
 
 
