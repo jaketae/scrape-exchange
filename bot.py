@@ -9,6 +9,9 @@ app = Flask(__name__)
 ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
 VERIFY_TOKEN = os.environ['VERIFY_TOKEN']
 bot = Bot(ACCESS_TOKEN)
+request_endpoint = f'{bot.graph_url}/me/messenger_profile'
+gs_obj = {"get_started": {"payload": "get started"}}
+_ = requests.post(request_endpoint, params=bot.auth_args, json=gs_obj)
 
 
 @app.route('/', methods=['GET'])
@@ -20,21 +23,16 @@ def verify():
 
 
 @app.route('/', methods=['POST'])
-def get_started():
-    request_endpoint = f'{bot.graph_url}/me/messenger_profile'
-    gs_obj = {"get_started": {"payload": "get started"}}
-    result = requests.post(request_endpoint, params=bot.auth_args, json=gs_obj)
-    return redirect('/welcome')
-
-
-@app.route('/', methods=['POST'])
 def respond():
     output = request.get_json()
     for event in output['entry']:
         messaging = event['messaging']
         for message in messaging:
-            if message.get('message'):
-                recipient_id = message['sender']['id']
+            recipient_id = message['sender']['id']
+            if message.get('postback') and message["postback"]["payload"] == "get started":
+                message = 'Welcome! To begin, type the name of a product you\'re interested in.'
+                bot.send_text_message(recipient_id, message)
+            elif message.get('message'):
                 keyword = message['message']['text']
                 scraper = Scraper(keyword)
                 wait_text = 'Please wait until I get back with the results...'
@@ -42,19 +40,6 @@ def respond():
                 summary, _ = scraper.scrape()
                 bot.send_text_message(recipient_id, summary)
     return 'Message processed'
-
-
-@app.route('/welcome')
-def welcome():
-    output = request.get_json()
-    for event in output['entry']:
-        messaging = event['messaging']
-        for message in messaging:
-            if message.get('postback') and message["postback"]["payload"] == "get started":
-                recipient_id = message['sender']['id']
-                message = 'Welcome! To begin, type the name of a product you\'re interested in.'
-                bot.send_text_message(recipient_id, message)
-    return 'Prompt sent'
 
 
 if __name__ == '__main__':
