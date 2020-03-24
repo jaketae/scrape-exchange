@@ -42,6 +42,8 @@ def send_alert(receiver_email):
 	except Exception as e:
 		print(e)
 # To-do: convert string to float for price comparison
+
+#NEED TO MODIFY SO THAT IT CAN CHECK CURRENT PRICE OF AN ITEM 
 def check_price(table, threshold):
 	bool_idx = table['price'] < threshold
 	if sum(bool_idx):

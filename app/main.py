@@ -12,7 +12,3 @@ while(True):
 	scraper = Scraper(keyword)
 	scraper.scrape()
 	table = scraper.summary
-	result = check_price(table, threshold)
-	if true:
-	    send_alert(receiver_email)
-	time.sleep(7 * 24 * 60 * 60) # Uncomment to test periodic check
