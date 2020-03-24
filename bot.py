@@ -1,4 +1,5 @@
 import os
+import requests
 from flask import Flask, request, redirect
 from pymessenger.bot import Bot
 from app.scraper import Scraper
