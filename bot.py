@@ -51,6 +51,7 @@ def welcome():
         messaging = event['messaging']
         for message in messaging:
             if message.get('postback') and message["postback"]["payload"] == "get started":
+                recipient_id = message['sender']['id']
                 message = 'Welcome! To begin, type the name of a product you\'re interested in.'
                 bot.send_text_message(recipient_id, message)
     return 'Prompt sent'
