@@ -18,39 +18,39 @@ Fixed Bugs (v.2020.03.21):
 - "Log in for Exchange pricing" hinders scraping
 
 Features to Come:
-- Integrate the bot into Facebook Messenger for easier access
 - Inform the user via email whenever a price change occurs for any given item in the wish list
 - Allow users to narrow down their search (*e.g.* prevent airpods cases from showing up)
 
-## Usage
+## Setup
 
 As it stands, the application requires the following dependencies:
 
 ```
 bs4
-pandas
+flask
 requests
 pymessenger
 ```
 
-Clone the repository and first run the following command on the shell to create a Conda virutal environment installed with the dependencies listed above. Then, activate the environment.
+To clone the repository, navigate into a directory and run
 
 ```bash
-conda env create -f environment.yml
-conda activate exchange-scrape
+git clone https://github.com/jaketae/scrape-exchange.git
 ```
 
-The `demo.py` script can be used to test run the application. To run, type
+## Example
+
+Below is a screenshot of the chatbot taken directly from Facebook Messenger. 
+
+![ScreenShot](/images/screenshot.png)
+
+The end goal is to provide a user-friendly interface through this platform. However, for simpler beta-testing and debugging purposes, the `demo.py` script can be used. To run this script, type
 
 ```bash
 python -m demo
 ```
 
-You will be asked to input a product. The program will print a table listing the first twelve product entries matching your search keyword along with their respective prices. 
-
-## Example
-
-Below is a sample demonstration of the application using the keyword `ipad pro`. 
+You will be asked to input a product. The program will print a table listing the first twelve product entries matching your search keyword along with their respective prices. Below is a simple demonstration of the application using the keyword `ipad pro`. 
 
 ```bash
 Which product are you interested in? ipad pro
@@ -92,5 +92,3 @@ Which product are you interested in? ipad pro
 34  Targus Pro-Tek Case for Apple iPad (7th gen.) ...  Log in for Exchange pricing
 35                                 Apple AirPods Pro                       $248.00
 ```
-
-Documentation for the updated chatbot coming soon!
