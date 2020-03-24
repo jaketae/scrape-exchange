@@ -40,5 +40,5 @@ class Scraper:
     def scrape(self):
         names = self._scrape_names()
         prices = self._scrape_prices()
-        summary = concatenate(names, prices)
-        return summary
+        summary, price_record = concatenate(names, prices)
+        return summary, price_record
