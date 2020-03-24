@@ -3,16 +3,16 @@ from app.scraper import Scraper
 from app.utils import send_alert, check_price
 
 
-keyword = input("Which product are you interested in? ")
-threshold = input("At what price to you want to be notified? ")
-receiver_email = input("What is your email address? ")
-print("Got it!")
+# keyword = input("Which product are you interested in? ")
+# threshold = input("At what price to you want to be notified? ")
+# receiver_email = input("What is your email address? ")
+# print("Got it!")
 
 while(True):
 	scraper = Scraper(keyword)
 	scraper.scrape()
 	table = scraper.summary
-	# result = check_price(table, threshold)
-	# if true:
-	send_alert(receiver_email)
-	# time.sleep(60 * 60) # Uncomment to test periodic check
+	result = check_price(table, threshold)
+	if true:
+	    send_alert(receiver_email)
+	time.sleep(7 * 24 * 60 * 60) # Uncomment to test periodic check
