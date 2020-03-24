@@ -1,7 +1,6 @@
 from collections import defaultdict
 
 
-
 def parse(keyword):
     keyword = str(keyword).replace(' ', '+')
     return keyword
@@ -31,7 +30,7 @@ def send_alert(receiver_email):
     # To-do: Add more info to email
     message = """\
     Subject: Price alert
-    The price of a product on your wish list has dropped.""" 
+    The price of a product on your wish list has dropped."""
     context = ssl.create_default_context()
     try:
         with smtplib.SMTP(smtp_server, port) as server:
@@ -44,7 +43,7 @@ def send_alert(receiver_email):
 
 
 # To-do: Convert string to float for price comparison
-# NEED TO MODIFY SO THAT IT CAN CHECK CURRENT PRICE OF AN ITEM 
+# NEED TO MODIFY SO THAT IT CAN CHECK CURRENT PRICE OF AN ITEM
 def check_price(table, threshold):
     bool_idx = table['price'] < threshold
     if sum(bool_idx):
