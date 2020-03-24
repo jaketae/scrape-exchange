@@ -23,7 +23,7 @@ def verify():
 def get_started():
     request_endpoint = f'{bot.graph_url}/me/messenger_profile'
     gs_obj = {"get_started": {"payload": "get started"}}
-    requests.post(request_endpoint, params=self.auth_args, json=gs_obj)
+    requests.post(request_endpoint, params=bot.auth_args, json=gs_obj)
 
 
 @app.route('/', methods=['POST'])
