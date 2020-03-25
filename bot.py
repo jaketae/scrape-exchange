@@ -78,6 +78,8 @@ def received_postback(message, recipient_id):
 
 
 def received_text(message, recipient_id):
+    global email
+    global flag_email
     keyword = message['message']['text']
     if flag_email:
         if not ('@' in keyword and '.' in keyword):
@@ -94,7 +96,6 @@ def received_text(message, recipient_id):
         summary, _ = scraper.scrape()
         bot.send_text_message(recipient_id, summary)
         default_prompt = 'What next?'
-
         bot.send_button_message(recipient_id, default_prompt, buttons)
 
 
