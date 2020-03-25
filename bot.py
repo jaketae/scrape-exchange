@@ -12,7 +12,6 @@ bot = Bot(ACCESS_TOKEN)
 request_endpoint = f'{bot.graph_url}/me/messenger_profile'
 gs_obj = {"get_started": {"payload": "get started"}}
 _ = requests.post(request_endpoint, params=bot.auth_args, json=gs_obj)
-flag_email, flag_messenger, email = None, None, None
 
 
 @app.route('/', methods=['GET'])
@@ -40,29 +39,24 @@ def received_postback(message, recipient_id):
     global email
     global flag_email
     global flag_messenger
+    global buttons
+    buttons = [
+        {"type": "web_url", "url": "https://www.shopmyexchange.com",
+         "title": "Browse the Exchange"},
+        {"type": "postback", "title": "Checkout item price",
+         "payload": "price summary"},
+        {"type": "postback", "title": "Set up price alert",
+         "payload": "price alert"}
+    ]
     postback = message['postback']['payload']
     if postback == 'get started':
         welcome_text = 'Hey there! I\'m PX bot. How can I help you?'
-        buttons = [
-            {"type": "web_url", "url": "https://www.shopmyexchange.com",
-                "title": "Browse the Exchange"},
-            {"type": "postback", "title": "Checkout item price",
-                "payload": "price summary"},
-            {"type": "postback", "title": "Set up price alert",
-                "payload": "price alert"}
-        ]
         bot.send_button_message(recipient_id, welcome_text, buttons)
     elif postback == 'price summary':
         summary_prompt = 'Type the name of a product you\'re interested in.'
         bot.send_text_message(recipient_id, summary_prompt)
     elif postback == 'price alert':
         alert_prompt = 'What is your preferred way of receiving notifications?'
-        buttons = [
-            {"type": "postback", "title": "Email",
-                "payload": "email"},
-            {"type": "postback", "title": "Facebook Messenger",
-                "payload": "messenger"}
-        ]
         bot.send_button_message(recipient_id, alert_prompt, buttons)
     elif postback == "email":
         email_prompt = 'What is your email address?'
@@ -71,15 +65,13 @@ def received_postback(message, recipient_id):
     elif postback == "messenger":
         confirm_text = 'Got it! I\'ll shoot you a message when there\'s an update.'
         bot.send_text_message(recipient_id, confirm_text)
-        return redirect('/')
+        flag_messenger = True
     else:
-        bot.send_text_message(recipient_id, 'Sorry, I don\'t recognize that.')
-        return redirect('/')
+        error_message = 'Sorry, I don\'t recognize that. Other ways I can help?'
+        bot.send_button_message(recipient_id, error_message, buttons)
 
 
 def received_text(message, recipient_id):
-    global email
-    global flag_email
     keyword = message['message']['text']
     if flag_email:
         if not ('@' in keyword and '.' in keyword):
@@ -96,14 +88,7 @@ def received_text(message, recipient_id):
         summary, _ = scraper.scrape()
         bot.send_text_message(recipient_id, summary)
         default_prompt = 'What next?'
-        buttons = [
-            {"type": "web_url", "url": "https://www.shopmyexchange.com",
-                "title": "Browse the Exchange"},
-            {"type": "postback", "title": "Checkout item price",
-                "payload": "price summary"},
-            {"type": "postback", "title": "Set up price alert",
-                "payload": "price alert"}
-        ]
+
         bot.send_button_message(recipient_id, default_prompt, buttons)
 
 
