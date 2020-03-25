@@ -48,7 +48,7 @@ def received_postback(message, recipient_id):
                 "title": "Browse the Exchange"},
             {"type": "postback", "title": "Checkout item price",
                 "payload": "price summary"},
-            {"type": "postback", "title": "Setup price alert",
+            {"type": "postback", "title": "Set up price alert",
                 "payload": "price alert"}
         ]
         bot.send_button_message(recipient_id, welcome_text, buttons)
@@ -93,6 +93,16 @@ def received_text(message, recipient_id):
         bot.send_text_message(recipient_id, wait_text)
         summary, _ = scraper.scrape()
         bot.send_text_message(recipient_id, summary)
+        default_prompt = 'What next?'
+        buttons = [
+            {"type": "web_url", "url": "https://www.shopmyexchange.com",
+                "title": "Browse the Exchange"},
+            {"type": "postback", "title": "Checkout item price",
+                "payload": "price summary"},
+            {"type": "postback", "title": "Set up price alert",
+                "payload": "price alert"}
+        ]
+        bot.send_button_message(recipient_id, default_prompt, buttons)
 
 
 if __name__ == '__main__':
