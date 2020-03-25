@@ -12,6 +12,16 @@ bot = Bot(ACCESS_TOKEN)
 request_endpoint = f'{bot.graph_url}/me/messenger_profile'
 gs_obj = {"get_started": {"payload": "get started"}}
 _ = requests.post(request_endpoint, params=bot.auth_args, json=gs_obj)
+buttons = [
+    {"type": "web_url", "url": "https://www.shopmyexchange.com",
+     "title": "Browse the Exchange"},
+    {"type": "postback", "title": "Checkout item price",
+     "payload": "price summary"},
+    {"type": "postback", "title": "Set up price alert",
+     "payload": "price alert"}
+]
+email = None
+flag_email, flag_messenger = False, False
 
 
 @app.route('/', methods=['GET'])
@@ -39,15 +49,6 @@ def received_postback(message, recipient_id):
     global email
     global flag_email
     global flag_messenger
-    global buttons
-    buttons = [
-        {"type": "web_url", "url": "https://www.shopmyexchange.com",
-         "title": "Browse the Exchange"},
-        {"type": "postback", "title": "Checkout item price",
-         "payload": "price summary"},
-        {"type": "postback", "title": "Set up price alert",
-         "payload": "price alert"}
-    ]
     postback = message['postback']['payload']
     if postback == 'get started':
         welcome_text = 'Hey there! I\'m PX bot. How can I help you?'
@@ -82,6 +83,7 @@ def received_text(message, recipient_id):
     global email
     global flag_email
     keyword = message['message']['text']
+    default_prompt = 'What next?'
     if flag_email:
         if not ('@' in keyword and '.' in keyword):
             error_message = 'Please enter a valid email address.'
@@ -90,6 +92,7 @@ def received_text(message, recipient_id):
             confirm_message = 'Email saved!'
             bot.send_text_message(recipient_id, confirm_message)
             email = keyword
+            bot.send_button_message(recipient_id, default_prompt, buttons)
     else:
         scraper = Scraper(keyword)
         wait_text = 'One mike...'
