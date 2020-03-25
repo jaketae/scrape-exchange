@@ -38,18 +38,35 @@ def respond():
 def received_postback(message, recipient_id):
     postback = message['postback']['payload']
     if postback == 'get started':
-        # message = 'Welcome! To begin, type the name of a product you\'re interested in.'
-        # bot.send_text_message(recipient_id, message)
-        text = 'This is a dummy text.'
+        welcome_text = 'Hey there! I\'m PX bot. How can I help you?'
+        price_alert_payload = "price alert"
+        price_summary_payload = "price summary"
         buttons = [
-            {"type": "web_url", "url": "https://www.messenger.com",
-                "title": "Open messenger"},
-            {"type": "postback", "title": "Call Postback",
-                "payload": "Payload for first bubble"}
+            {"type": "web_url", "url": "https://www.shopmyexchange.com",
+                "title": "Browse the Exchange"},
+            {"type": "postback", "title": "Checkout an item's price",
+                "payload": price_summary_payload},
+            {"type": "postback", "title": "Setup price alert notification",
+                "payload": price_alert_payload}
         ]
-        bot.send_button_message(recipient_id, text, buttons)
-    elif postback == 'Payload for first bubble':
-        bot.send_text_message(recipient_id, 'Button correctly working')
+        bot.send_button_message(recipient_id, welcome_text, buttons)
+    elif postback == price_summary_payload:
+        summary_prompt = 'Type the name of a product you\'re interested in.'
+        bot.send_text_message(recipient_id, summary_prompt)
+    elif postback == price_alert_payload:
+        alert_prompt = 'What is your preferred way of notification?'
+        buttons = [
+            {"type": "postback", "title": "Messenger",
+                "payload": "messenger"},
+            {"type": "postback", "title": "Email",
+                "payload": "email"}
+        ]
+        bot.send_button_message(recipient_id, alert_prompt, buttons)
+    elif postback == "email":
+        email_prompt = 'What is your email address?'
+        bot.send_text_message(recipient_id, email_prompt)
+    elif postback == "messenger":
+        bot.send_text_message(recipient_id, 'Got it!')
     else:
         pass
 
@@ -64,4 +81,4 @@ def received_text(message, recipient_id):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(threaded=True)
