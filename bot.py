@@ -20,8 +20,8 @@ buttons = [
     {"type": "postback", "title": "Set up price alert",
      "payload": "price alert"}
 ]
-email = None
-flag_email, flag_messenger = False, False
+email, flag_email, flag_messenger = None, None, None
+default_prompt = 'What next?'
 
 
 @app.route('/', methods=['GET'])
@@ -34,6 +34,7 @@ def verify():
 
 @app.route('/', methods=['POST'])
 def respond():
+    global flag_email
     output = request.get_json()
     for event in output['entry']:
         for message in event['messaging']:
@@ -42,6 +43,7 @@ def respond():
                 received_postback(message, recipient_id)
             elif message.get('message'):
                 received_text(message, recipient_id)
+                flag_email = False if flag_email else False
     return 'Message processed'
 
 
@@ -56,9 +58,8 @@ def received_postback(message, recipient_id):
     elif postback == 'price summary':
         summary_prompt = 'Type the name of a product you\'re interested in.'
         bot.send_text_message(recipient_id, summary_prompt)
-        flag_email = False
     elif postback == 'price alert':
-        alert_prompt = 'What is your preferred way of receiving notifications?'
+        alert_prompt = 'How do you want to receive notifications?'
         notification = [
             {"type": "postback", "title": "Email",
                 "payload": "email"},
@@ -67,7 +68,7 @@ def received_postback(message, recipient_id):
         ]
         bot.send_button_message(recipient_id, alert_prompt, notification)
     elif postback == "email":
-        email_prompt = 'What is your email address?'
+        email_prompt = 'What\'s your email address?'
         bot.send_text_message(recipient_id, email_prompt)
         flag_email = True
     elif postback == "messenger":
@@ -83,7 +84,6 @@ def received_text(message, recipient_id):
     global email
     global flag_email
     keyword = message['message']['text']
-    default_prompt = 'What next?'
     if flag_email:
         if not ('@' in keyword and '.' in keyword):
             error_message = 'Please enter a valid email address.'
@@ -94,14 +94,12 @@ def received_text(message, recipient_id):
             email = keyword
             bot.send_button_message(recipient_id, default_prompt, buttons)
     else:
-        bot.send_text_message(recipient_id, keyword)
-        # scraper = Scraper(keyword)
-        # wait_text = 'One mike...'
-        # bot.send_text_message(recipient_id, wait_text)
-        # summary, _ = scraper.scrape()
-        # bot.send_text_message(recipient_id, summary)
-        # default_prompt = 'What next?'
-        # bot.send_button_message(recipient_id, default_prompt, buttons)
+        scraper = Scraper(keyword)
+        wait_text = 'One mike...'
+        bot.send_text_message(recipient_id, wait_text)
+        summary, _ = scraper.scrape()
+        bot.send_text_message(recipient_id, summary)
+        bot.send_button_message(recipient_id, default_prompt, buttons)
 
 
 if __name__ == '__main__':
