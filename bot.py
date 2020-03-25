@@ -26,7 +26,7 @@ buttons = [
      "payload": "exit"}
 ]
 
-email, temp_email, flag_email, flag_messenger = None, None, None, None
+# email, temp_email, flag_email, flag_messenger = None, None, None, None
 
 
 @app.route('/', methods=['GET'])
@@ -64,76 +64,87 @@ def received_postback(message, recipient_id):
         summary_prompt = 'Type the name of a product you\'re interested in.'
         bot.send_text_message(recipient_id, summary_prompt)
     elif postback == 'price alert':
-        alert_prompt = 'How do you want to receive notifications?'
-        notification = [
-            {"type": "postback", "title": "Email",
-                "payload": "email"},
-            {"type": "postback", "title": "Facebook Messenger",
-                "payload": "messenger"}
-        ]
-        bot.send_button_message(recipient_id, alert_prompt, notification)
-    elif postback == "email":
-        email_prompt = 'What\'s your email address?'
-        bot.send_text_message(recipient_id, email_prompt)
-        flag_email = True
-    elif postback == "messenger":
-        confirm_text = 'Got it! I\'ll shoot you a message when there\'s an update.'
-        bot.send_text_message(recipient_id, confirm_text)
-        bot.send_button_message(recipient_id, default_prompt, buttons)
-        flag_messenger = True
-    elif postback == 'yes':
-        override_text = 'Roger. I\'ve updated your email information!'
-        bot.send_text_message(recipient_id, override_text)
-        bot.send_button_message(recipient_id, default_prompt, buttons)
-        email = temp_email
-    elif postback == 'no':
-        keep_text = 'I\'ll keep the email address I have.'
-        bot.send_text_message(recipient_id, keep_text)
-        bot.send_button_message(recipient_id, default_prompt, buttons)
+        alert_prompt = 'What is the URL of the product you want me to track?'
+        bot.send_text_message(recipient_id, alert_prompt)
+        # alert_prompt = 'How do you want to receive notifications?'
+        # notification = [
+        #     {"type": "postback", "title": "Email",
+        #         "payload": "email"},
+        #     {"type": "postback", "title": "Facebook Messenger",
+        #         "payload": "messenger"}
+        # ]
+        # bot.send_button_message(recipient_id, alert_prompt, notification)
+        # elif postback == "email":
+        #     email_prompt = 'What\'s your email address?'
+        #     bot.send_text_message(recipient_id, email_prompt)
+        #     flag_email = True
+        # elif postback == "messenger":
+        #     confirm_text = 'Got it! I\'ll shoot you a message when there\'s an update.'
+        #     bot.send_text_message(recipient_id, confirm_text)
+        #     bot.send_button_message(recipient_id, default_prompt, buttons)
+        #     flag_messenger = True
+        # elif postback == 'yes':
+        #     override_text = 'Roger. I\'ve updated your email information!'
+        #     bot.send_text_message(recipient_id, override_text)
+        #     bot.send_button_message(recipient_id, default_prompt, buttons)
+        #     email = temp_email
+        # elif postback == 'no':
+        #     keep_text = 'I\'ll keep the email address I have.'
+        #     bot.send_text_message(recipient_id, keep_text)
+        #     bot.send_button_message(recipient_id, default_prompt, buttons)
     elif postback == 'exit':
         exit_message = 'Glad I could help. If you need me next time, send me any text!'
         bot.send_text_message(recipient_id, exit_message)
     else:
         welcome_text = 'Hey there! I\'m PX bot. How can I help you?'
-        bot.send_button_message(recipient_id, welcome_text, buttons[:-1])
+        bot.send_button_message(recipient_id, welcome_text, buttons)
 
 
 def received_text(message, recipient_id):
-    global email
-    global flag_email
-    global temp_email
+    # global email
+    # global flag_email
+    # global temp_email
     keyword = message['message']['text']
-    if flag_email:
-        if email is None:
-            if not ('@' in keyword and '.' in keyword):
-                error_message = 'Please enter a valid email address.'
-                bot.send_text_message(recipient_id, error_message)
-            else:
-                confirm_message = 'Email saved!'
-                bot.send_text_message(recipient_id, confirm_message)
-                email = keyword
-                flag_email = False
-                bot.send_button_message(
-                    recipient_id, default_prompt, buttons)
+    # if flag_email:
+    #     if email is None:
+    #         if not ('@' in keyword and '.' in keyword):
+    #             error_message = 'Please enter a valid email address.'
+    #             bot.send_text_message(recipient_id, error_message)
+    #         else:
+    #             confirm_message = 'Email saved!'
+    #             bot.send_text_message(recipient_id, confirm_message)
+    #             email = keyword
+    #             flag_email = False
+    #             bot.send_button_message(
+    #                 recipient_id, default_prompt, buttons)
+    #     else:
+    #         temp_email = keyword
+    #         override_message = 'I already have your email. Override?'
+    #         yes_no = [
+    #             {"type": "postback", "title": "Yes",
+    #              "payload": "yes"},
+    #             {"type": "postback", "title": "No",
+    #              "payload": "no"}
+    #         ]
+    #         bot.send_button_message(recipient_id, override_message, yes_no)
+    #         flag_email = False
+    # else:
+    if 'www' in keyword:
+        if 'shopmyexchange' not in keyword:
+            error_message = 'Please enter a valid URL.'
+            bot.send_text_message(recipient_id, error_message)
         else:
-            temp_email = keyword
-            override_message = 'I already have your email. Override?'
-            yes_no = [
-                {"type": "postback", "title": "Yes",
-                 "payload": "yes"},
-                {"type": "postback", "title": "No",
-                 "payload": "no"}
-            ]
-            bot.send_button_message(recipient_id, override_message, yes_no)
-            flag_email = False
+            confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
+            bot.send_text_message(recipient_id, confirmation)
+            bot.send_button_message(recipient_id, default_prompt, buttons)
+            # Some check_price function with timer
     else:
         scraper = Scraper(keyword)
-        wait_text = 'One mike...'
-        bot.send_text_message(recipient_id, wait_text)
+        # wait_text = 'One mike...'
+        # bot.send_text_message(recipient_id, wait_text)
         summary, _ = scraper.scrape()
         bot.send_text_message(recipient_id, summary)
-        bot.send_button_message(
-            recipient_id, default_prompt, buttons)
+        bot.send_button_message(recipient_id, default_prompt, buttons)
 
 
 if __name__ == '__main__':
