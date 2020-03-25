@@ -66,18 +66,19 @@ def received_postback(message, recipient_id):
     elif postback == "email":
         email_prompt = 'What is your email address?'
         bot.send_text_message(recipient_id, email_prompt)
-    elif postback == "messenger":
-        bot.send_text_message(recipient_id, 'Got it!')
         flag_email = True
+    elif postback == "messenger":
+        confirm_text = 'Got it! I\'ll shoot you a message when there\'s an update.'
+        bot.send_text_message(recipient_id, confirm_text)
     else:
-        pass
+        bot.send_text_message(recipient_id, 'Sorry, I don\'t recognize that.')
 
 
 def received_text(message, recipient_id):
     keyword = message['message']['text']
-    if '@' in keyword:  # email address
-        if '.' not in keyword:
-            error_message = 'Please type a valid email address.'
+    if flag_email:
+        if '@' not in keyword:
+            error_message = 'Please enter a valid email address.'
             bot.send_text_message(recipient_id, error_message)
         else:
             confirm_message = 'Email saved!'
