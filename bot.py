@@ -38,10 +38,17 @@ def respond():
 def received_postback(message, recipient_id):
     postback = message['postback']['payload']
     if postback == 'get started':
-        message = 'Welcome! To begin, type the name of a product you\'re interested in.'
-        bot.send_text_message(recipient_id, message)
-    elif postback == 'other option':
-        pass
+        # message = 'Welcome! To begin, type the name of a product you\'re interested in.'
+        # bot.send_text_message(recipient_id, message)
+        buttons = [
+            {"type": "web_url", "url": "https://www.oculus.com/en-us/rift/",
+                "title": "Open Web URL"},
+            {"type": "postback", "title": "Call Postback",
+                "payload": "Payload for first bubble", }
+        ]
+        bot.send_button_message(recipient_id, buttons)
+    elif postback == 'Payload for first bubble':
+        bot.send_text_message(recipient_id, 'Button correctly working')
     else:
         pass
 
