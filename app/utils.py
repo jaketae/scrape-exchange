@@ -13,7 +13,6 @@ def concatenate(names, prices):
             if price[0] == '$':
                 name = name[:-1]
                 summary += f'{name}: {price}\n\n'
-                stripped_price =
                 try:
                     price_record[name] = float(price[1:].replace(',', ''))
                 except:
