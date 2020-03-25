@@ -13,7 +13,12 @@ def concatenate(names, prices):
             if price[0] == '$':
                 name = name[:-1]
                 summary += f'{name}: {price}\n\n'
-                price_record[name] = float(price[1:].replace(',', ''))
+                stripped_price =
+                try:
+                    price_record[name] = float(price[1:].replace(',', ''))
+                except:
+                    price_record[name] = float(
+                        price[price.index('-') + 1:].replace(',', ''))
         if len(summary) == 0:
             summary = 'There are no results to show.'
         else:

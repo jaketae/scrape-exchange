@@ -22,8 +22,8 @@ class Scraper:
         prices = []
         for item in items:
             try:
-                price = item.find(
-                    "div", {"class": "aafes-price-sale"}).text.strip().replace(' Sale', '')
+                price = ''.join(item.find(
+                    "div", {"class": "aafes-price-sale"}).text.strip().replace(' Sale', '').split())
             except:
                 try:
                     price = item.find(
