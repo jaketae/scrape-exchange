@@ -71,8 +71,10 @@ def received_postback(message, recipient_id):
     elif postback == "messenger":
         confirm_text = 'Got it! I\'ll shoot you a message when there\'s an update.'
         bot.send_text_message(recipient_id, confirm_text)
+        return redirect('/')
     else:
         bot.send_text_message(recipient_id, 'Sorry, I don\'t recognize that.')
+        return redirect('/')
 
 
 def received_text(message, recipient_id):
