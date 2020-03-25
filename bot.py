@@ -12,9 +12,7 @@ bot = Bot(ACCESS_TOKEN)
 request_endpoint = f'{bot.graph_url}/me/messenger_profile'
 gs_obj = {"get_started": {"payload": "get started"}}
 _ = requests.post(request_endpoint, params=bot.auth_args, json=gs_obj)
-flag_email = None
-flag_messenger = None
-email = None
+flag_email, flag_messenger, email = None, None, None
 
 
 @app.route('/', methods=['GET'])
@@ -78,6 +76,7 @@ def received_postback(message, recipient_id):
 
 
 def received_text(message, recipient_id):
+    global flag_email
     keyword = message['message']['text']
     if flag_email:
         if '@' not in keyword:
