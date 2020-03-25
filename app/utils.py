@@ -17,7 +17,7 @@ def concatenate(names, prices):
                     price_record[name] = float(price[1:].replace(',', ''))
                 except:
                     price_record[name] = float(
-                        price[price.index('-') + 1:].replace(',', ''))
+                        price[price.index('-') + 2:].replace(',', ''))
         if len(summary) == 0:
             summary = 'There are no results to show.'
         else:
