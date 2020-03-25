@@ -12,6 +12,9 @@ bot = Bot(ACCESS_TOKEN)
 request_endpoint = f'{bot.graph_url}/me/messenger_profile'
 gs_obj = {"get_started": {"payload": "get started"}}
 _ = requests.post(request_endpoint, params=bot.auth_args, json=gs_obj)
+flag_email = None
+flag_messenger = None
+email = None
 
 
 @app.route('/', methods=['GET'])
@@ -54,12 +57,12 @@ def received_postback(message, recipient_id):
         summary_prompt = 'Type the name of a product you\'re interested in.'
         bot.send_text_message(recipient_id, summary_prompt)
     elif postback == price_alert_payload:
-        alert_prompt = 'What is your preferred way of notification?'
+        alert_prompt = 'What is your preferred way of receiving notifications?'
         buttons = [
-            {"type": "postback", "title": "Messenger",
-                "payload": "messenger"},
             {"type": "postback", "title": "Email",
-                "payload": "email"}
+                "payload": "email"},
+            {"type": "postback", "title": "Facebook Messenger",
+                "payload": "messenger"}
         ]
         bot.send_button_message(recipient_id, alert_prompt, buttons)
     elif postback == "email":
@@ -67,17 +70,27 @@ def received_postback(message, recipient_id):
         bot.send_text_message(recipient_id, email_prompt)
     elif postback == "messenger":
         bot.send_text_message(recipient_id, 'Got it!')
+        flag_email = True
     else:
         pass
 
 
 def received_text(message, recipient_id):
     keyword = message['message']['text']
-    scraper = Scraper(keyword)
-    wait_text = 'One mike...'
-    bot.send_text_message(recipient_id, wait_text)
-    summary, _ = scraper.scrape()
-    bot.send_text_message(recipient_id, summary)
+    if '@' in keyword:  # email address
+        if '.' not in keyword:
+            error_message = 'Please type a valid email address.'
+            bot.send_text_message(recipient_id, error_message)
+        else:
+            confirm_message = 'Email saved!'
+            bot.send_text_message(recipient_id, confirm_message)
+            email = keyword
+    else:
+        scraper = Scraper(keyword)
+        wait_text = 'One mike...'
+        bot.send_text_message(recipient_id, wait_text)
+        summary, _ = scraper.scrape()
+        bot.send_text_message(recipient_id, summary)
 
 
 if __name__ == '__main__':
