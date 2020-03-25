@@ -42,21 +42,19 @@ def received_postback(message, recipient_id):
     postback = message['postback']['payload']
     if postback == 'get started':
         welcome_text = 'Hey there! I\'m PX bot. How can I help you?'
-        price_alert_payload = "price alert"
-        price_summary_payload = "price summary"
         buttons = [
             {"type": "web_url", "url": "https://www.shopmyexchange.com",
                 "title": "Browse the Exchange"},
-            {"type": "postback", "title": "Checkout an item's price",
-                "payload": price_summary_payload},
-            {"type": "postback", "title": "Setup price alert notification",
-                "payload": price_alert_payload}
+            {"type": "postback", "title": "Checkout item price",
+                "payload": "price summary"},
+            {"type": "postback", "title": "Setup price alert",
+                "payload": "price alert"}
         ]
         bot.send_button_message(recipient_id, welcome_text, buttons)
-    elif postback == price_summary_payload:
+    elif postback == 'price summary':
         summary_prompt = 'Type the name of a product you\'re interested in.'
         bot.send_text_message(recipient_id, summary_prompt)
-    elif postback == price_alert_payload:
+    elif postback == 'price alert':
         alert_prompt = 'What is your preferred way of receiving notifications?'
         buttons = [
             {"type": "postback", "title": "Email",
