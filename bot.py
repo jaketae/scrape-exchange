@@ -39,6 +39,9 @@ def respond():
 
 
 def received_postback(message, recipient_id):
+    global email
+    global flag_email
+    global flag_messenger
     postback = message['postback']['payload']
     if postback == 'get started':
         welcome_text = 'Hey there! I\'m PX bot. How can I help you?'
