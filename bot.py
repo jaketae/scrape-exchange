@@ -19,7 +19,6 @@ def verify():
     if request.args.get("hub.verify_token") == VERIFY_TOKEN:
         return request.args.get("hub.challenge")
     else:
-
         return 'Invalid verification token'
 
 
@@ -27,20 +26,33 @@ def verify():
 def respond():
     output = request.get_json()
     for event in output['entry']:
-        messaging = event['messaging']
-        for message in messaging:
+        for message in event['messaging']:
             recipient_id = message['sender']['id']
-            if message.get('postback') and message["postback"]["payload"] == "get started":
-                message = 'Welcome! To begin, type the name of a product you\'re interested in.'
-                bot.send_text_message(recipient_id, message)
+            if message.get('postback'):
+                received_postback(message, recipient_id)
             elif message.get('message'):
-                keyword = message['message']['text']
-                scraper = Scraper(keyword)
-                wait_text = 'One mike...'
-                bot.send_text_message(recipient_id, wait_text)
-                summary, _ = scraper.scrape()
-                bot.send_text_message(recipient_id, summary)
+                received_text(message, recipient_id)
     return 'Message processed'
+
+
+def received_postback(message, recipient_id):
+    postback = message['postback']['payload']
+    if postback == 'get started':
+        message = 'Welcome! To begin, type the name of a product you\'re interested in.'
+        bot.send_text_message(recipient_id, message)
+    elif postback == 'other option':
+        pass
+    else:
+        pass
+
+
+def received_text(message, recipient_id):
+    keyword = message['message']['text']
+    scraper = Scraper(keyword)
+    wait_text = 'One mike...'
+    bot.send_text_message(recipient_id, wait_text)
+    summary, _ = scraper.scrape()
+    bot.send_text_message(recipient_id, summary)
 
 
 if __name__ == '__main__':
