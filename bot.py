@@ -55,6 +55,7 @@ def received_postback(message, recipient_id):
     elif postback == 'price summary':
         summary_prompt = 'Type the name of a product you\'re interested in.'
         bot.send_text_message(recipient_id, summary_prompt)
+        flag_email = False
     elif postback == 'price alert':
         alert_prompt = 'What is your preferred way of receiving notifications?'
         notification = [
