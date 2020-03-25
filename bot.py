@@ -57,7 +57,13 @@ def received_postback(message, recipient_id):
         bot.send_text_message(recipient_id, summary_prompt)
     elif postback == 'price alert':
         alert_prompt = 'What is your preferred way of receiving notifications?'
-        bot.send_button_message(recipient_id, alert_prompt, buttons)
+        notification = [
+            {"type": "postback", "title": "Email",
+                "payload": "email"},
+            {"type": "postback", "title": "Facebook Messenger",
+                "payload": "messenger"}
+        ]
+        bot.send_button_message(recipient_id, alert_prompt, notification)
     elif postback == "email":
         email_prompt = 'What is your email address?'
         bot.send_text_message(recipient_id, email_prompt)
