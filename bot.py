@@ -43,7 +43,7 @@ def respond():
                 received_postback(message, recipient_id)
             elif message.get('message'):
                 received_text(message, recipient_id)
-                flag_email = False if flag_email else False
+                flag_email = False if flag_email else True
     return 'Message processed'
 
 
