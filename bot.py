@@ -15,7 +15,7 @@ _ = requests.post(request_endpoint, params=bot.auth_args, json=gs_obj)
 buttons = [
     {"type": "web_url", "url": "https://www.shopmyexchange.com",
      "title": "Browse the Exchange"},
-    {"type": "postback", "title": "Checkout item price",
+    {"type": "postback", "title": "Check out item price",
      "payload": "price summary"},
     {"type": "postback", "title": "Set up price alert",
      "payload": "price alert"}
@@ -94,13 +94,14 @@ def received_text(message, recipient_id):
             email = keyword
             bot.send_button_message(recipient_id, default_prompt, buttons)
     else:
-        scraper = Scraper(keyword)
-        wait_text = 'One mike...'
-        bot.send_text_message(recipient_id, wait_text)
-        summary, _ = scraper.scrape()
-        bot.send_text_message(recipient_id, summary)
-        default_prompt = 'What next?'
-        bot.send_button_message(recipient_id, default_prompt, buttons)
+        bot.send_text_message(recipient_id, keyword)
+        # scraper = Scraper(keyword)
+        # wait_text = 'One mike...'
+        # bot.send_text_message(recipient_id, wait_text)
+        # summary, _ = scraper.scrape()
+        # bot.send_text_message(recipient_id, summary)
+        # default_prompt = 'What next?'
+        # bot.send_button_message(recipient_id, default_prompt, buttons)
 
 
 if __name__ == '__main__':
