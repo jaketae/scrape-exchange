@@ -2,7 +2,6 @@ import os
 import requests
 from flask import Flask, request, redirect
 # from flask_sqlalchemy import SQLAlchemy
-# from urllib.parse import urlparse
 from pymessenger.bot import Bot
 from app.scraper import Scraper
 from app.tracker import Tracker
@@ -128,8 +127,10 @@ def received_text(message, recipient_id):
         scraper = Scraper(text)
         summary = scraper.scrape()
         bot.send_text_message(recipient_id, summary)
-
         bot.send_button_message(recipient_id, default_prompt, buttons[1:])
+
+
+# def notify(recipient_id):
 
 
 if __name__ == '__main__':
