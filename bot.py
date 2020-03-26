@@ -27,6 +27,7 @@ request_endpoint = f'{bot.graph_url}/me/messenger_profile'
 gs_obj = {"get_started": {"payload": "get started"}}
 _ = requests.post(request_endpoint, params=bot.auth_args, json=gs_obj)
 
+flag = None
 default_prompt = 'What next?'
 return_prompt = 'Welcome back! How can I help?'
 buttons = [
