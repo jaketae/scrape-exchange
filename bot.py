@@ -82,7 +82,6 @@ def received_text(message, recipient_id):
             bot.send_text_message(recipient_id, confirmation)
             bot.send_button_message(recipient_id, default_prompt, buttons[1:])
             old_price = Tracker(keyword).price
-            log(f'Old price recorded as {old_price}')
     else:
         scraper = Scraper(keyword)
         summary = scraper.scrape()
