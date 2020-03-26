@@ -76,6 +76,8 @@ def respond():
 
 
 def received_postback(message, recipient_id):
+    global flag
+    flag = False
     payload = message['postback']['payload']
     if payload == 'get started':
         welcome_text = 'Hey there! I\'m PX bot. How can I help you?'
@@ -84,7 +86,6 @@ def received_postback(message, recipient_id):
         summary_prompt = 'Type the name of a product you\'re interested in.'
         bot.send_text_message(recipient_id, summary_prompt)
     elif payload == 'price alert':
-        global flag
         flag = True
         alert_prompt = 'What is the URL of the product you want me to track?'
         bot.send_text_message(recipient_id, alert_prompt)
