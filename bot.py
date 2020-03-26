@@ -112,8 +112,8 @@ def received_text(message, recipient_id):
             bot.send_text_message(recipient_id, str(flag))
         else:
             flag = False
-            old_price = Tracker(text).price
-            if old_price:
+            price = Tracker(text).price
+            if price:
                 confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
                 bot.send_text_message(recipient_id, confirmation)
                 bot.send_button_message(
@@ -121,7 +121,7 @@ def received_text(message, recipient_id):
                 bot.send_text_message(recipient_id, str(flag))
             else:
                 error_message = 'Sorry, I can\'t track that URL.'
-                bot.send_text_message(recipient_id, confirmation)
+                bot.send_text_message(recipient_id, error_message)
                 bot.send_button_message(
                     recipient_id, default_prompt, buttons[1:])
                 bot.send_text_message(recipient_id, str(flag))
