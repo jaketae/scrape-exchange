@@ -23,7 +23,7 @@ buttons = [
     {"type": "postback", "title": "Set up price alert",
      "payload": "price alert"},
     {"type": "postback", "title": "Exit conversation",
-     "payload": "exit"}
+     "payload": "exit conversation"}
 ]
 
 
