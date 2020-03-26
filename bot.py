@@ -84,6 +84,8 @@ def received_postback(message, recipient_id):
         summary_prompt = 'Type the name of a product you\'re interested in.'
         bot.send_text_message(recipient_id, summary_prompt)
     elif payload == 'price alert':
+        global flag
+        flag = True
         alert_prompt = 'What is the URL of the product you want me to track?'
         bot.send_text_message(recipient_id, alert_prompt)
     else:
@@ -92,25 +94,25 @@ def received_postback(message, recipient_id):
 
 
 def received_text(message, recipient_id):
+    global flag
     text = message['message']['text']
     if text == 'Hey':
         bot.send_button_message(recipient_id, return_prompt, buttons[:-1])
+    elif flag:
+        if 'shopmyexchange.com' not in keyword:
+            error_message = 'Please enter a valid URL.'
+            bot.send_text_message(recipient_id, error_message)
+        else:
+            del flag
+            confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
+            bot.send_text_message(recipient_id, confirmation)
+            bot.send_button_message(recipient_id, default_prompt, buttons[1:])
+            old_price = Tracker(keyword).price
     else:
-        bot.send_text_message(recipient_id, text)
-    # elif flag_url:
-    #     if 'https://www.shopmyexchange.com' not in keyword:
-    #         error_message = 'Please enter a valid URL.'
-    #         bot.send_text_message(recipient_id, error_message)
-    #     else:
-    #         confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
-    #         bot.send_text_message(recipient_id, confirmation)
-    #         bot.send_button_message(recipient_id, default_prompt, buttons[1:])
-    #         old_price = Tracker(keyword).price
-    # else:
-    #     scraper = Scraper(keyword)
-    #     summary = scraper.scrape()
-    #     bot.send_text_message(recipient_id, summary)
-    #     bot.send_button_message(recipient_id, default_prompt, buttons[1:])
+        scraper = Scraper(keyword)
+        summary = scraper.scrape()
+        bot.send_text_message(recipient_id, summary)
+        bot.send_button_message(recipient_id, default_prompt, buttons[1:])
 
 
 if __name__ == '__main__':
