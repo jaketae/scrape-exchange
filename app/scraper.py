@@ -40,5 +40,5 @@ class Scraper:
     def scrape(self):
         names = self._scrape_names()
         prices = self._scrape_prices()
-        summary, price_record = stringify(names, prices)
-        return summary, price_record
+        summary = stringify(names, prices)
+        return summary

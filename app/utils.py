@@ -19,7 +19,7 @@ def stringify(names, prices):
             summary = 'There are no results to show.'
         else:
             summary = summary[:-1]
-    return summary, price_record
+    return summary
 
 
 def floatify(price):
