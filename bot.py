@@ -16,6 +16,7 @@ gs_obj = {"get_started": {"payload": "get started"}}
 _ = requests.post(request_endpoint, params=bot.auth_args, json=gs_obj)
 
 default_prompt = 'What next?'
+return_prompt = 'Welcome back! How can I help?'
 buttons = [
     {"type": "web_url", "url": "https://www.shopmyexchange.com",
      "title": "Browse the Exchange"},
@@ -27,7 +28,7 @@ buttons = [
      "payload": "exit"}
 ]
 
-old_price = None
+old_price, flag_url = None, False
 
 
 @app.route('/', methods=['GET'])
@@ -53,6 +54,7 @@ def respond():
 
 
 def received_postback(message, recipient_id):
+    global flag_url
     postback = message['postback']['payload']
     if postback == 'get started':
         welcome_text = 'Hey there! I\'m PX bot. How can I help you?'
@@ -63,17 +65,19 @@ def received_postback(message, recipient_id):
     elif postback == 'price alert':
         alert_prompt = 'What is the URL of the product you want me to track?'
         bot.send_text_message(recipient_id, alert_prompt)
+        flag_url = True
     else:
         exit_message = 'If you need me next time, simply type \'Hey\' to wake me up.'
         bot.send_text_message(recipient_id, exit_message)
 
 
 def received_text(message, recipient_id):
+    global flag_url
     keyword = message['message']['text']
     if keyword == 'Hey':
-        bot.send_button_message(recipient_id, default_prompt, buttons[:-1])
-    elif 'www' in keyword:
-        if 'shopmyexchange' not in keyword:
+        bot.send_button_message(recipient_id, return_prompt, buttons[:-1])
+    elif flag_url:
+        if 'https://www.shopmyexchange.com' not in keyword:
             error_message = 'Please enter a valid URL.'
             bot.send_text_message(recipient_id, error_message)
         else:
@@ -82,6 +86,7 @@ def received_text(message, recipient_id):
             bot.send_text_message(recipient_id, confirmation)
             bot.send_button_message(recipient_id, default_prompt, buttons[1:])
             old_price = Tracker(keyword).price
+            flag_url = False
     else:
         scraper = Scraper(keyword)
         summary = scraper.scrape()
