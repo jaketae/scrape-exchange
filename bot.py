@@ -105,7 +105,7 @@ def received_text(message, recipient_id):
             error_message = 'Please enter a valid URL.'
             bot.send_text_message(recipient_id, error_message)
         else:
-            del flag
+            flag = False
             confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
             bot.send_text_message(recipient_id, confirmation)
             bot.send_button_message(recipient_id, default_prompt, buttons[1:])
