@@ -100,7 +100,7 @@ def received_text(message, recipient_id):
     if text == 'Hey':
         bot.send_button_message(recipient_id, return_prompt, buttons[:-1])
     elif flag:
-        if 'shopmyexchange.com' not in keyword:
+        if 'shopmyexchange.com' not in text:
             error_message = 'Please enter a valid URL.'
             bot.send_text_message(recipient_id, error_message)
         else:
@@ -108,9 +108,9 @@ def received_text(message, recipient_id):
             confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
             bot.send_text_message(recipient_id, confirmation)
             bot.send_button_message(recipient_id, default_prompt, buttons[1:])
-            old_price = Tracker(keyword).price
+            old_price = Tracker(text).price
     else:
-        scraper = Scraper(keyword)
+        scraper = Scraper(text)
         summary = scraper.scrape()
         bot.send_text_message(recipient_id, summary)
         bot.send_button_message(recipient_id, default_prompt, buttons[1:])
