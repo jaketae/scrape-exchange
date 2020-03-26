@@ -46,7 +46,6 @@ def respond():
                 received_postback(message, recipient_id)
             elif message.get('message'):
                 received_text(message, recipient_id)
-            elif message.get('message'):
     return 'Message processed'
 
 
