@@ -1,8 +1,8 @@
 import os
 import requests
 from flask import Flask, request, redirect
-from flask_sqlalchemy import SQLAlchemy
-from urllib.parse import urlparse
+# from flask_sqlalchemy import SQLAlchemy
+# from urllib.parse import urlparse
 from pymessenger.bot import Bot
 from app.scraper import Scraper
 from app.tracker import Tracker
