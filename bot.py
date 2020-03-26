@@ -26,7 +26,6 @@ request_endpoint = f'{bot.graph_url}/me/messenger_profile'
 gs_obj = {"get_started": {"payload": "get started"}}
 _ = requests.post(request_endpoint, params=bot.auth_args, json=gs_obj)
 
-flag = None
 default_prompt = 'What next?'
 return_prompt = 'Welcome back! How can I help?'
 buttons = [
@@ -79,8 +78,6 @@ def respond():
 
 
 def received_postback(message, recipient_id):
-    global flag
-    flag = False
     payload = message['postback']['payload']
     if payload == 'get started':
         welcome_text = 'Hey there! I\'m PX bot. How can I help you?'
@@ -91,7 +88,6 @@ def received_postback(message, recipient_id):
         bot.send_text_message(recipient_id, summary_prompt)
 
     elif payload == 'price alert':
-        flag = True
         alert_prompt = 'What is the URL of the product you want me to track?'
         bot.send_button_message(recipient_id, alert_prompt, [buttons[0]])
     else:
@@ -100,29 +96,25 @@ def received_postback(message, recipient_id):
 
 
 def received_text(message, recipient_id):
-    # bot.send_text_message(recipient_id, str(message['message']))
-    global flag
     text = message['message']['text']
     if 'Hey' in text:
         bot.send_button_message(recipient_id, return_prompt, buttons[:-1])
-
-    elif flag:
-        if 'shopmyexchange.com' not in text:
-            error_message = 'Please enter a valid URL.'
-            bot.send_text_message(recipient_id, error_message)
-        else:
-            flag = False
-            price = Tracker(text).price
-            if price:
-                confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
-                bot.send_text_message(recipient_id, confirmation)
-                bot.send_button_message(
-                    recipient_id, default_prompt, buttons[1:])
-            else:
-                error_message = 'Sorry, I can\'t track that URL.'
-                bot.send_text_message(recipient_id, error_message)
-                bot.send_button_message(
-                    recipient_id, default_prompt, buttons[1:])
+    # elif flag:
+    #     if 'shopmyexchange.com' not in text:
+    #         error_message = 'Please enter a valid URL.'
+    #         bot.send_text_message(recipient_id, error_message)
+    #     else:
+    #         price = Tracker(text).price
+    #         if price:
+    #             confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
+    #             bot.send_text_message(recipient_id, confirmation)
+    #             bot.send_button_message(
+    #                 recipient_id, default_prompt, buttons[1:])
+    #         else:
+    #             error_message = 'Sorry, I can\'t track that URL.'
+    #             bot.send_text_message(recipient_id, error_message)
+    #             bot.send_button_message(
+    #                 recipient_id, default_prompt, buttons[1:])
     else:
         scraper = Scraper(text)
         summary = scraper.scrape()
@@ -131,10 +123,10 @@ def received_text(message, recipient_id):
 
 
 def received_link(message, recipient_id):
-    # bot.send_text_message(recipient_id, str(message))
     link = message['message']['attachments'][0]['payload']['url']
     price = Tracker(link).price
-    bot.send_text_message(recipient_id, price)
+    confirmation = f'I\'ll let you know when price falls below the current ${price}. {default_prompt}'
+    bot.send_button_message(recipient_id, confirmation, buttons[1:])
 
 
 # def notify(recipient_id):
