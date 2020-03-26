@@ -11,20 +11,20 @@ class Tracker:
 
     @property
     def price(self):
-        items = self.soup.find_all(
-            "div", {"class": "aafes-pdp-price mt-1 jsRenderedPrice"})
-        for item in items:
+        price = 0
+        item = self.soup.find_all(
+            "div", {"class": "aafes-pdp-price mt-1 jsRenderedPrice"})[0]
+        try:
+            price = ''.join(item.find(
+                "div", {"class": "aafes-price-sale"}).text.strip().replace(' Sale', '').split())
+        except:
             try:
-                str_price = ''.join(item.find(
-                    "div", {"class": "aafes-price-sale"}).text.strip().replace(' Sale', '').split())
+                price = item.find(
+                    "div", {"class": "aafes-price"}).text.strip()
             except:
-                try:
-                    str_price = item.find(
-                        "div", {"class": "aafes-price"}).text.strip()
-                except:
-                    str_price = item.find(
-                        "div", {"class": "aafes-price-sm"}).text.strip()
-        return floatify(str_price)
+                price = item.find(
+                    "div", {"class": "aafes-price-sm"}).text.strip()
+        return floatify(price)
 
     def check_price(self, old_price):
         return old_price > self.price
