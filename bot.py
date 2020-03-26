@@ -102,7 +102,7 @@ def received_postback(message, recipient_id):
 def received_text(message, recipient_id):
     global flag
     text = message['message']['text']
-    if text == 'Hey':
+    if 'Hey' in text:
         bot.send_button_message(recipient_id, return_prompt, buttons[:-1])
         bot.send_text_message(recipient_id, str(flag))
     elif flag:
@@ -112,11 +112,19 @@ def received_text(message, recipient_id):
             bot.send_text_message(recipient_id, str(flag))
         else:
             flag = False
-            confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
-            bot.send_text_message(recipient_id, confirmation)
-            bot.send_button_message(recipient_id, default_prompt, buttons[1:])
-            bot.send_text_message(recipient_id, str(flag))
             old_price = Tracker(text).price
+            if price:
+                confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
+                bot.send_text_message(recipient_id, confirmation)
+                bot.send_button_message(
+                    recipient_id, default_prompt, buttons[1:])
+                bot.send_text_message(recipient_id, str(flag))
+            else:
+                error_message = 'Sorry, I can\'t track that URL.'
+                bot.send_text_message(recipient_id, confirmation)
+                bot.send_button_message(
+                    recipient_id, default_prompt, buttons[1:])
+                bot.send_text_message(recipient_id, str(flag))
     else:
         scraper = Scraper(text)
         summary = scraper.scrape()

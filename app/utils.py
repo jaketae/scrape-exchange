@@ -26,5 +26,8 @@ def floatify(price):
     try:
         price = float(price[1:].replace(',', ''))
     except:
-        price = float(price[price.index('-') + 2:].replace(',', ''))
+        try:
+            price = float(price[price.index('-') + 2:].replace(',', ''))
+        except:
+            pass
     return price

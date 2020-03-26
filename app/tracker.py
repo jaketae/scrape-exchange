@@ -14,7 +14,6 @@ class Tracker:
         soup = self.soup
         item = soup.find(
             "div", {"class": "aafes-pdp-price mt-1 jsRenderedPrice"})
-        assert item is not None
         try:
             price = ''.join(item.find(
                 "div", {"class": "aafes-price-sale"}).text.strip().replace(' Sale', '').split())
@@ -23,8 +22,11 @@ class Tracker:
                 price = item.find(
                     "div", {"class": "aafes-price"}).text.strip()
             except:
-                price = item.find(
-                    "div", {"class": "aafes-price-sm"}).text.strip()
+                try:
+                    price = item.find(
+                        "div", {"class": "aafes-price-sm"}).text.strip()
+                except:
+                    price = 0
         return floatify(price)
 
     def check_price(self, old_price):
