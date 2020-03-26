@@ -68,7 +68,7 @@ def received_postback(message, recipient_id):
 def received_text(message, recipient_id):
     keyword = message['message']['text']
     if keyword == 'Hey':
-        bot.send_button_message(recipient_id, default_prompt, buttons)
+        bot.send_button_message(recipient_id, default_prompt, buttons[:-1])
     elif 'www' in keyword:
         if 'shopmyexchange' not in keyword:
             error_message = 'Please enter a valid URL.'
@@ -76,7 +76,7 @@ def received_text(message, recipient_id):
         else:
             confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
             bot.send_text_message(recipient_id, confirmation)
-            bot.send_button_message(recipient_id, default_prompt, buttons)
+            bot.send_button_message(recipient_id, default_prompt, buttons[1:])
             # Some check_price function with timer
     else:
         scraper = Scraper(keyword)
@@ -84,7 +84,7 @@ def received_text(message, recipient_id):
         bot.send_text_message(recipient_id, wait_text)
         summary, _ = scraper.scrape()
         bot.send_text_message(recipient_id, summary)
-        bot.send_button_message(recipient_id, default_prompt, buttons)
+        bot.send_button_message(recipient_id, default_prompt, buttons[1:])
 
 
 if __name__ == '__main__':
