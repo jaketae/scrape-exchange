@@ -1,6 +1,6 @@
 import bs4
 import requests
-from app.utils import parse, concatenate
+from app.utils import parse, stringify
 
 
 class Scraper:
@@ -40,5 +40,5 @@ class Scraper:
     def scrape(self):
         names = self._scrape_names()
         prices = self._scrape_prices()
-        summary, price_record = concatenate(names, prices)
+        summary, price_record = stringify(names, prices)
         return summary, price_record

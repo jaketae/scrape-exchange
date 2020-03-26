@@ -3,6 +3,7 @@ import requests
 from flask import Flask, request, redirect
 from pymessenger.bot import Bot
 from app.scraper import Scraper
+from app.tracker import Tracker
 
 
 app = Flask(__name__)
@@ -25,6 +26,8 @@ buttons = [
     {"type": "postback", "title": "Exit conversation",
      "payload": "exit"}
 ]
+
+old_price = None
 
 
 @app.route('/', methods=['GET'])
@@ -74,15 +77,15 @@ def received_text(message, recipient_id):
             error_message = 'Please enter a valid URL.'
             bot.send_text_message(recipient_id, error_message)
         else:
+            global old_price
             confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
             bot.send_text_message(recipient_id, confirmation)
             bot.send_button_message(recipient_id, default_prompt, buttons[1:])
-            # Some check_price function with timer
+            old_price = Tracker(keyword).price
+            log(f'Old price recorded as {old_price}')
     else:
-        # scraper = Scraper(keyword)
-        # wait_text = 'One mike...'
-        # bot.send_text_message(recipient_id, wait_text)
-        # summary, _ = scraper.scrape()
+        scraper = Scraper(keyword)
+        summary, _ = scraper.scrape()
         bot.send_text_message(recipient_id, keyword)
         bot.send_button_message(recipient_id, default_prompt, buttons[1:])
 
