@@ -11,8 +11,10 @@ class Tracker:
 
     @property
     def price(self):
-        item = self.soup.find(
+        soup = self.soup
+        item = soup.find(
             "div", {"class": "aafes-pdp-price mt-1 jsRenderedPrice"})
+        assert item is not None
         try:
             price = ''.join(item.find(
                 "div", {"class": "aafes-price-sale"}).text.strip().replace(' Sale', '').split())
