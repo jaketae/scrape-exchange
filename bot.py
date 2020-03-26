@@ -54,7 +54,6 @@ def respond():
 
 
 def received_postback(message, recipient_id):
-    global flag_url
     postback = message['postback']['payload']
     if postback == 'get started':
         welcome_text = 'Hey there! I\'m PX bot. How can I help you?'
@@ -63,9 +62,10 @@ def received_postback(message, recipient_id):
         summary_prompt = 'Type the name of a product you\'re interested in.'
         bot.send_text_message(recipient_id, summary_prompt)
     elif postback == 'price alert':
+        global flag_url
+        flag_url = True
         alert_prompt = 'What is the URL of the product you want me to track?'
         bot.send_text_message(recipient_id, alert_prompt)
-        flag_url = True
     else:
         exit_message = 'If you need me next time, simply type \'Hey\' to wake me up.'
         bot.send_text_message(recipient_id, exit_message)
@@ -81,12 +81,12 @@ def received_text(message, recipient_id):
             error_message = 'Please enter a valid URL.'
             bot.send_text_message(recipient_id, error_message)
         else:
-            global old_price
             confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
             bot.send_text_message(recipient_id, confirmation)
             bot.send_button_message(recipient_id, default_prompt, buttons[1:])
-            old_price = Tracker(keyword).price
             flag_url = False
+            global old_price
+            old_price = Tracker(keyword).price
     else:
         scraper = Scraper(keyword)
         summary = scraper.scrape()
