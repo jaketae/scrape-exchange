@@ -7,18 +7,13 @@ from app.scraper import Scraper
 from app.tracker import Tracker
 
 
-dev = False
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-if dev:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123456@localhost/pricebot'
-    ACCESS_TOKEN = 'EAADgVEsrncIBAMYo5ZByh97atuawSDMucDv7Ql9kZA1pbPTpviZCxf65QDEgwCZAeYTMSfRD0UWddkRHUDMZBg8imFh04ZAQycRQt3KOtC047pWRqjoGnrzwj6i0Swer6GGQ0TU3J3p8ttKCoR89ZAMZAdaitTwItYjsnnNd7dhxwtYb97doKj2QlgQhcYG8ZBEcZD'
-    VERIFY_TOKEN = 'UNIQUE TOKEN'
-else:
-    # app.config['SQLALCHEMY_DATABASE_URI'] = ''
-    ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
-    VERIFY_TOKEN = os.environ['VERIFY_TOKEN']
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = ''
+ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
+VERIFY_TOKEN = os.environ['VERIFY_TOKEN']
 
 # db = SQLAlchemy(app)
 bot = Bot(ACCESS_TOKEN, api_version=6.0)
@@ -92,7 +87,7 @@ def received_postback(message, recipient_id):
         bot.send_text_message(recipient_id, summary_prompt)
 
     elif payload == 'price alert':
-        alert_prompt = 'What is the URL of the product you want me to track?'
+        alert_prompt = 'Which product do you want me to track?\nPro tip: Browse the Exchange and share the link with me via Messenger.'
         bot.send_button_message(recipient_id, alert_prompt, [buttons[0]])
     else:
         exit_message = 'If you need me again, simply type \'Hey\' to wake me up!'
