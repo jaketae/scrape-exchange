@@ -113,7 +113,7 @@ def received_text(message, recipient_id):
         else:
             flag = False
             old_price = Tracker(text).price
-            if price:
+            if old_price:
                 confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
                 bot.send_text_message(recipient_id, confirmation)
                 bot.send_button_message(
