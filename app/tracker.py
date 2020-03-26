@@ -11,9 +11,8 @@ class Tracker:
 
     @property
     def price(self):
-        price = 0
-        item = self.soup.find_all(
-            "div", {"class": "aafes-pdp-price mt-1 jsRenderedPrice"})[0]
+        item = self.soup.find(
+            "div", {"class": "aafes-pdp-price mt-1 jsRenderedPrice"})
         try:
             price = ''.join(item.find(
                 "div", {"class": "aafes-price-sale"}).text.strip().replace(' Sale', '').split())
