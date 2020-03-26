@@ -15,19 +15,16 @@ class Tracker:
             "div", {"class": "aafes-pdp-price mt-1 jsRenderedPrice"})
         for item in items:
             try:
-                price = ''.join(item.find(
+                str_price = ''.join(item.find(
                     "div", {"class": "aafes-price-sale"}).text.strip().replace(' Sale', '').split())
             except:
                 try:
-                    price = item.find(
+                    str_price = item.find(
                         "div", {"class": "aafes-price"}).text.strip()
                 except:
-                    try:
-                        price = item.find(
-                            "div", {"class": "aafes-price-sm"}).text.strip()
-                    except:
-                        price = 'None'
-        return floatify(price)
+                    str_price = item.find(
+                        "div", {"class": "aafes-price-sm"}).text.strip()
+        return floatify(str_price)
 
     def check_price(self, old_price):
         return old_price > self.price
