@@ -73,7 +73,7 @@ def respond():
             elif message.get('message'):
                 received_text(message, recipient_id)
             else:
-                received_linke(message, recipient_id)
+                received_link(message, recipient_id)
     return 'Message processed'
 
 
@@ -99,33 +99,34 @@ def received_postback(message, recipient_id):
 
 
 def received_text(message, recipient_id):
-    global flag
-    text = message['message']['text']
-    if 'Hey' in text:
-        bot.send_button_message(recipient_id, return_prompt, buttons[:-1])
+    bot.send_text_message(recipient_id, str(message['message']))
+    # global flag
+    # text = message['message']['text']
+    # if 'Hey' in text:
+    #     bot.send_button_message(recipient_id, return_prompt, buttons[:-1])
 
-    elif flag:
-        if 'shopmyexchange.com' not in text:
-            error_message = 'Please enter a valid URL.'
-            bot.send_text_message(recipient_id, error_message)
-        else:
-            flag = False
-            price = Tracker(text).price
-            if price:
-                confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
-                bot.send_text_message(recipient_id, confirmation)
-                bot.send_button_message(
-                    recipient_id, default_prompt, buttons[1:])
-            else:
-                error_message = 'Sorry, I can\'t track that URL.'
-                bot.send_text_message(recipient_id, error_message)
-                bot.send_button_message(
-                    recipient_id, default_prompt, buttons[1:])
-    else:
-        scraper = Scraper(text)
-        summary = scraper.scrape()
-        bot.send_text_message(recipient_id, summary)
-        bot.send_button_message(recipient_id, default_prompt, buttons[1:])
+    # elif flag:
+    #     if 'shopmyexchange.com' not in text:
+    #         error_message = 'Please enter a valid URL.'
+    #         bot.send_text_message(recipient_id, error_message)
+    #     else:
+    #         flag = False
+    #         price = Tracker(text).price
+    #         if price:
+    #             confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
+    #             bot.send_text_message(recipient_id, confirmation)
+    #             bot.send_button_message(
+    #                 recipient_id, default_prompt, buttons[1:])
+    #         else:
+    #             error_message = 'Sorry, I can\'t track that URL.'
+    #             bot.send_text_message(recipient_id, error_message)
+    #             bot.send_button_message(
+    #                 recipient_id, default_prompt, buttons[1:])
+    # else:
+    #     scraper = Scraper(text)
+    #     summary = scraper.scrape()
+    #     bot.send_text_message(recipient_id, summary)
+    #     bot.send_button_message(recipient_id, default_prompt, buttons[1:])
 
 
 def received_link(message, recipient_id):
