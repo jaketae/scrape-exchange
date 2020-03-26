@@ -21,7 +21,7 @@ else:
     VERIFY_TOKEN = os.environ['VERIFY_TOKEN']
 
 # db = SQLAlchemy(app)
-bot = Bot(ACCESS_TOKEN)
+bot = Bot(ACCESS_TOKEN, api_version=6.0)
 request_endpoint = f'{bot.graph_url}/me/messenger_profile'
 gs_obj = {"get_started": {"payload": "get started"}}
 _ = requests.post(request_endpoint, params=bot.auth_args, json=gs_obj)
