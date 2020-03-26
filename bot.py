@@ -74,6 +74,10 @@ def respond():
                     received_text(message, recipient_id)
                 else:
                     received_link(message, recipient_id)
+            else:
+                error_message = 'Sorry, I don\'t understand that. Other way I can help?'
+                bot.send_button_message(
+                    recipient_id, error_message, buttons[1:])
     return 'Message processed'
 
 
@@ -97,24 +101,8 @@ def received_postback(message, recipient_id):
 
 def received_text(message, recipient_id):
     text = message['message']['text']
-    if 'Hey' in text:
+    if 'hey' in text.lower():
         bot.send_button_message(recipient_id, return_prompt, buttons[:-1])
-    # elif flag:
-    #     if 'shopmyexchange.com' not in text:
-    #         error_message = 'Please enter a valid URL.'
-    #         bot.send_text_message(recipient_id, error_message)
-    #     else:
-    #         price = Tracker(text).price
-    #         if price:
-    #             confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
-    #             bot.send_text_message(recipient_id, confirmation)
-    #             bot.send_button_message(
-    #                 recipient_id, default_prompt, buttons[1:])
-    #         else:
-    #             error_message = 'Sorry, I can\'t track that URL.'
-    #             bot.send_text_message(recipient_id, error_message)
-    #             bot.send_button_message(
-    #                 recipient_id, default_prompt, buttons[1:])
     else:
         scraper = Scraper(text)
         summary = scraper.scrape()
@@ -127,9 +115,21 @@ def received_link(message, recipient_id):
     price = Tracker(link).price
     confirmation = f'I\'ll let you know when price falls below the current ${price}. {default_prompt}'
     bot.send_button_message(recipient_id, confirmation, buttons[1:])
+    # data = Price(recipient_id, price, link)
+    # db.session.add(data)
+    # db.session.commit()
 
 
-# def notify(recipient_id):
+# def check_price(recipident_id):
+#     message = 'Price dropped! Check out this link.'
+#     target = Price.query.filter_by(user=recipient_id).all()
+#     for entry in target:
+#         url = entry.url
+#         old_price = entry.price
+#         if old_price > Tracker(url).price:
+#             button = [{"type": "web_url", "url": url,
+#                        "title": "Check out item"}]
+#             bot.send_button_message(recipient_id, message, button)
 
 
 if __name__ == '__main__':
