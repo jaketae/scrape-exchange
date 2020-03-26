@@ -46,6 +46,7 @@ def respond():
                 received_postback(message, recipient_id)
             elif message.get('message'):
                 received_text(message, recipient_id)
+            elif message.get('message'):
     return 'Message processed'
 
 
@@ -53,7 +54,7 @@ def received_postback(message, recipient_id):
     postback = message['postback']['payload']
     if postback == 'get started':
         welcome_text = 'Hey there! I\'m PX bot. How can I help you?'
-        bot.send_button_message(recipient_id, welcome_text, buttons[:-1])
+        bot.send_button_message(recipient_id, welcome_text, buttons)
     elif postback == 'price summary':
         summary_prompt = 'Type the name of a product you\'re interested in.'
         bot.send_text_message(recipient_id, summary_prompt)
