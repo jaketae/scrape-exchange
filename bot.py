@@ -133,7 +133,8 @@ def received_text(message, recipient_id):
 def received_link(message, recipient_id):
     # bot.send_text_message(recipient_id, str(message))
     link = message['message']['attachments'][0]['payload']['url']
-    bot.send_text_message(recipient_id, link)
+    price = Tracker(link).price
+    bot.send_text_message(recipient_id, price)
 
 
 # def notify(recipient_id):

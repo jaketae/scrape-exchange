@@ -31,3 +31,11 @@ def floatify(price):
         except:
             pass
     return price
+
+
+def redirect(url):
+    if 'facebook' in url:
+        page = requests.get(url)
+        soup = bs4.BeautifulSoup(page.content)
+        url = soup.find("script").text[27:-3].replace('\\', '')
+    return url
