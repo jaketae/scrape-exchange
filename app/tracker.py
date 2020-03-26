@@ -1,11 +1,12 @@
 import bs4
 import requests
-from app.utils import floatify
+from app.utils import redirect, floatify
 
 
 class Tracker:
 
     def __init__(self, url):
+        url = redirect(url)
         page = requests.get(url)
         self.soup = bs4.BeautifulSoup(page.text, 'lxml')
 
