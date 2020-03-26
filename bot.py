@@ -72,6 +72,8 @@ def respond():
                 received_postback(message, recipient_id)
             elif message.get('message'):
                 received_text(message, recipient_id)
+            else:
+                received_linke(message, recipient_id)
     return 'Message processed'
 
 
@@ -90,10 +92,9 @@ def received_postback(message, recipient_id):
     elif payload == 'price alert':
         flag = True
         alert_prompt = 'What is the URL of the product you want me to track?'
-        bot.send_text_message(recipient_id, alert_prompt)
-
+        bot.send_button_message(recipient_id, alert_prompt, [buttons[0]])
     else:
-        exit_message = 'If you need me next time, simply type \'Hey\' to wake me up.'
+        exit_message = 'If you need me again, simply type \'Hey\' to wake me up!'
         bot.send_text_message(recipient_id, exit_message)
 
 
@@ -107,7 +108,6 @@ def received_text(message, recipient_id):
         if 'shopmyexchange.com' not in text:
             error_message = 'Please enter a valid URL.'
             bot.send_text_message(recipient_id, error_message)
-
         else:
             flag = False
             price = Tracker(text).price
@@ -116,18 +116,20 @@ def received_text(message, recipient_id):
                 bot.send_text_message(recipient_id, confirmation)
                 bot.send_button_message(
                     recipient_id, default_prompt, buttons[1:])
-
             else:
                 error_message = 'Sorry, I can\'t track that URL.'
                 bot.send_text_message(recipient_id, error_message)
                 bot.send_button_message(
                     recipient_id, default_prompt, buttons[1:])
-
     else:
         scraper = Scraper(text)
         summary = scraper.scrape()
         bot.send_text_message(recipient_id, summary)
         bot.send_button_message(recipient_id, default_prompt, buttons[1:])
+
+
+def received_link(message, recipient_id):
+    bot.send_text_message(recipient_id, str(message))
 
 
 # def notify(recipient_id):
