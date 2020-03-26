@@ -26,8 +26,6 @@ buttons = [
      "payload": "exit"}
 ]
 
-# email, temp_email, flag_email, flag_messenger = None, None, None, None
-
 
 @app.route('/', methods=['GET'])
 def verify():
@@ -52,10 +50,6 @@ def respond():
 
 
 def received_postback(message, recipient_id):
-    global email
-    global flag_email
-    global temp_email
-    global flag_messenger
     postback = message['postback']['payload']
     if postback == 'get started':
         welcome_text = 'Hey there! I\'m PX bot. How can I help you?'
@@ -66,70 +60,16 @@ def received_postback(message, recipient_id):
     elif postback == 'price alert':
         alert_prompt = 'What is the URL of the product you want me to track?'
         bot.send_text_message(recipient_id, alert_prompt)
-        # alert_prompt = 'How do you want to receive notifications?'
-        # notification = [
-        #     {"type": "postback", "title": "Email",
-        #         "payload": "email"},
-        #     {"type": "postback", "title": "Facebook Messenger",
-        #         "payload": "messenger"}
-        # ]
-        # bot.send_button_message(recipient_id, alert_prompt, notification)
-        # elif postback == "email":
-        #     email_prompt = 'What\'s your email address?'
-        #     bot.send_text_message(recipient_id, email_prompt)
-        #     flag_email = True
-        # elif postback == "messenger":
-        #     confirm_text = 'Got it! I\'ll shoot you a message when there\'s an update.'
-        #     bot.send_text_message(recipient_id, confirm_text)
-        #     bot.send_button_message(recipient_id, default_prompt, buttons)
-        #     flag_messenger = True
-        # elif postback == 'yes':
-        #     override_text = 'Roger. I\'ve updated your email information!'
-        #     bot.send_text_message(recipient_id, override_text)
-        #     bot.send_button_message(recipient_id, default_prompt, buttons)
-        #     email = temp_email
-        # elif postback == 'no':
-        #     keep_text = 'I\'ll keep the email address I have.'
-        #     bot.send_text_message(recipient_id, keep_text)
-        #     bot.send_button_message(recipient_id, default_prompt, buttons)
-    elif postback == 'exit':
-        exit_message = 'Glad I could help. If you need me next time, send me any text!'
-        bot.send_text_message(recipient_id, exit_message)
     else:
-        welcome_text = 'Hey there! I\'m PX bot. How can I help you?'
-        bot.send_button_message(recipient_id, welcome_text, buttons)
+        exit_message = 'If you need me next time, simply type \'Hey\' to wake me up.'
+        bot.send_text_message(recipient_id, exit_message)
 
 
 def received_text(message, recipient_id):
-    # global email
-    # global flag_email
-    # global temp_email
     keyword = message['message']['text']
-    # if flag_email:
-    #     if email is None:
-    #         if not ('@' in keyword and '.' in keyword):
-    #             error_message = 'Please enter a valid email address.'
-    #             bot.send_text_message(recipient_id, error_message)
-    #         else:
-    #             confirm_message = 'Email saved!'
-    #             bot.send_text_message(recipient_id, confirm_message)
-    #             email = keyword
-    #             flag_email = False
-    #             bot.send_button_message(
-    #                 recipient_id, default_prompt, buttons)
-    #     else:
-    #         temp_email = keyword
-    #         override_message = 'I already have your email. Override?'
-    #         yes_no = [
-    #             {"type": "postback", "title": "Yes",
-    #              "payload": "yes"},
-    #             {"type": "postback", "title": "No",
-    #              "payload": "no"}
-    #         ]
-    #         bot.send_button_message(recipient_id, override_message, yes_no)
-    #         flag_email = False
-    # else:
-    if 'www' in keyword:
+    if keyword == 'Hey':
+        bot.send_button_message(recipient_id, default_prompt, buttons)
+    elif 'www' in keyword:
         if 'shopmyexchange' not in keyword:
             error_message = 'Please enter a valid URL.'
             bot.send_text_message(recipient_id, error_message)
