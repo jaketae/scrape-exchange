@@ -81,8 +81,8 @@ def received_text(message, recipient_id):
             # Some check_price function with timer
     else:
         scraper = Scraper(keyword)
-        # wait_text = 'One mike...'
-        # bot.send_text_message(recipient_id, wait_text)
+        wait_text = 'One mike...'
+        bot.send_text_message(recipient_id, wait_text)
         summary, _ = scraper.scrape()
         bot.send_text_message(recipient_id, summary)
         bot.send_button_message(recipient_id, default_prompt, buttons)
