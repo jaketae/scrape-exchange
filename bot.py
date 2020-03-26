@@ -83,16 +83,20 @@ def received_postback(message, recipient_id):
     if payload == 'get started':
         welcome_text = 'Hey there! I\'m PX bot. How can I help you?'
         bot.send_button_message(recipient_id, welcome_text, buttons[:-1])
+        bot.send_text_message(recipient_id, str(flag))
     elif payload == 'price summary':
         summary_prompt = 'Type the name of a product you\'re interested in.'
         bot.send_text_message(recipient_id, summary_prompt)
+        bot.send_text_message(recipient_id, str(flag))
     elif payload == 'price alert':
         flag = True
         alert_prompt = 'What is the URL of the product you want me to track?'
         bot.send_text_message(recipient_id, alert_prompt)
+        bot.send_text_message(recipient_id, str(flag))
     else:
         exit_message = 'If you need me next time, simply type \'Hey\' to wake me up.'
         bot.send_text_message(recipient_id, exit_message)
+        bot.send_text_message(recipient_id, str(flag))
 
 
 def received_text(message, recipient_id):
@@ -100,20 +104,24 @@ def received_text(message, recipient_id):
     text = message['message']['text']
     if text == 'Hey':
         bot.send_button_message(recipient_id, return_prompt, buttons[:-1])
+        bot.send_text_message(recipient_id, str(flag))
     elif flag:
         if 'shopmyexchange.com' not in text:
             error_message = 'Please enter a valid URL.'
             bot.send_text_message(recipient_id, error_message)
+            bot.send_text_message(recipient_id, str(flag))
         else:
             flag = False
             confirmation = 'Got it! I\'ll shoot you a message when there\'s an update.'
             bot.send_text_message(recipient_id, confirmation)
             bot.send_button_message(recipient_id, default_prompt, buttons[1:])
+            bot.send_text_message(recipient_id, str(flag))
             old_price = Tracker(text).price
     else:
         scraper = Scraper(text)
         summary = scraper.scrape()
         bot.send_text_message(recipient_id, summary)
+        bot.send_text_message(recipient_id, str(flag))
         bot.send_button_message(recipient_id, default_prompt, buttons[1:])
 
 
