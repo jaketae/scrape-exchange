@@ -7,13 +7,18 @@ from app.scraper import Scraper
 from app.tracker import Tracker
 
 
+dev = False
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-
-# app.config['SQLALCHEMY_DATABASE_URI'] = ''
-ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
-VERIFY_TOKEN = os.environ['VERIFY_TOKEN']
+if dev:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123456@localhost/pricebot'
+    ACCESS_TOKEN = 'EAADgVEsrncIBAMYo5ZByh97atuawSDMucDv7Ql9kZA1pbPTpviZCxf65QDEgwCZAeYTMSfRD0UWddkRHUDMZBg8imFh04ZAQycRQt3KOtC047pWRqjoGnrzwj6i0Swer6GGQ0TU3J3p8ttKCoR89ZAMZAdaitTwItYjsnnNd7dhxwtYb97doKj2QlgQhcYG8ZBEcZD'
+    VERIFY_TOKEN = 'UNIQUE TOKEN'
+else:
+    # app.config['SQLALCHEMY_DATABASE_URI'] = ''
+    ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
+    VERIFY_TOKEN = os.environ['VERIFY_TOKEN']
 
 # db = SQLAlchemy(app)
 bot = Bot(ACCESS_TOKEN, api_version=6.0)
@@ -87,7 +92,7 @@ def received_postback(message, recipient_id):
         bot.send_text_message(recipient_id, summary_prompt)
 
     elif payload == 'price alert':
-        alert_prompt = 'Which product do you want me to track?\nPro tip: Browse the Exchange and share the link with me via Messenger.'
+        alert_prompt = 'What is the URL of the product you want me to track?'
         bot.send_button_message(recipient_id, alert_prompt, [buttons[0]])
     else:
         exit_message = 'If you need me again, simply type \'Hey\' to wake me up!'
@@ -107,11 +112,7 @@ def received_text(message, recipient_id):
 
 def received_link(message, recipient_id):
     link = message['message']['attachments'][0]['payload']['url']
-<<<<<<< HEAD
     price = Tracker(link).price
-=======
-    price = Tracker(link).price    
->>>>>>> acb51098135da582ce6db291669ada78959fe3c3
     #log[recipient_id] = {link : price}
     confirmation = f'I\'ll let you know when price falls below the current ${price}. {default_prompt}'
     bot.send_button_message(recipient_id, confirmation, buttons[1:])
@@ -122,10 +123,6 @@ def received_link(message, recipient_id):
     #        bot.send_button_message(recipient_id, update, buttons[1:])
     #
     #    time.sleep(7 * 24 * 60 * 60)
-<<<<<<< HEAD
-
-=======
->>>>>>> acb51098135da582ce6db291669ada78959fe3c3
     # data = Price(recipient_id, price, link)
     # db.session.add(data)
     # db.session.commit()
