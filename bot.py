@@ -108,8 +108,17 @@ def received_text(message, recipient_id):
 def received_link(message, recipient_id):
     link = message['message']['attachments'][0]['payload']['url']
     price = Tracker(link).price
+    #log[recipient_id] = {link : price}
     confirmation = f'I\'ll let you know when price falls below the current ${price}. {default_prompt}'
     bot.send_button_message(recipient_id, confirmation, buttons[1:])
+    #while True:
+    #    if price > Tracker(link).price:
+    #        update = 'Price dropped! Check out this link.'
+    #        log[recipient_id][link] = Tracker(link).price
+    #        bot.send_button_message(recipient_id, update, buttons[1:])
+    #
+    #    time.sleep(7 * 24 * 60 * 60)
+
     # data = Price(recipient_id, price, link)
     # db.session.add(data)
     # db.session.commit()
