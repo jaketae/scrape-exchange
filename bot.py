@@ -126,9 +126,6 @@ def received_link(message, recipient_id):
     # db.session.commit()
 
 
-g
-
-
 @cron.scheduled_job('interval', seconds='10')
 def scheduled_task(message):
     global recipient_id
