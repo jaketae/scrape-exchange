@@ -140,9 +140,10 @@ def scheduled_task():
 #                        "title": "Check out item"}]
 #             bot.send_button_message(recipient_id, message, button)
 
+sched = BackgroundScheduler(daemon=True)
+sched.add_job(scheduled_task, 'interval', minutes=1)
+sched.start()
 
 if __name__ == '__main__':
     app.run(threaded=True)
-    sched = BackgroundScheduler(daemon=True)
-    sched.add_job(scheduled_task, 'interval', minutes=1)
-    sched.start()
+    
