@@ -10,7 +10,9 @@ from app.tracker import Tracker
 
 dev = False
 app = Flask(__name__)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+cron = BackgroundScheduler(daemon=True)
+cron.start()
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 if dev:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123456@localhost/pricebot'
@@ -124,6 +126,7 @@ def received_link(message, recipient_id):
     # db.session.commit()
 
 
+@cron.interval_schedule(seconds=10)
 def scheduled_task():
     global recipient_id
     bot.send_text_message(recipient_id, 'Hi!')
@@ -140,10 +143,6 @@ def scheduled_task():
 #                        "title": "Check out item"}]
 #             bot.send_button_message(recipient_id, message, button)
 
-sched = BackgroundScheduler(daemon=True)
-sched.add_job(scheduled_task, 'interval', minutes=1)
-sched.start()
 
 if __name__ == '__main__':
     app.run(threaded=True)
-    
