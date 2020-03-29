@@ -126,7 +126,7 @@ def received_link(message, recipient_id):
     # db.session.commit()
 
 
-@cron.scheduled_job('interval', seconds='10')
+@cron.scheduled_job('interval', seconds=10)
 def scheduled_task(message):
     global recipient_id
     bot.send_text_message(recipient_id, message)
