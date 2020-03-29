@@ -41,7 +41,7 @@ class Price(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.String(200))
     price = db.Column(db.Float)
-    url = db.Column(db.String(200))
+    url = db.Column(db.String(500))
 
     def __init__(self, user, price, url):
         self.user = user
