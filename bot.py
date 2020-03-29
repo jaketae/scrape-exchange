@@ -49,6 +49,10 @@ class Price(db.Model):
         self.url = url
 
 
+db.drop_all()
+db.create_all()
+
+
 @app.route('/', methods=['GET'])
 def verify():
     if request.args.get("hub.verify_token") == VERIFY_TOKEN:
