@@ -122,22 +122,23 @@ def received_link(message, recipient_id):
 
 
 
-# def check_price(recipient_id):
-#     message = 'Price dropped! Check out this link.'
-#     target = Price.query.filter_by(user=recipient_id).all()
-#     for entry in target:
-#         url = entry.url
-#         old_price = entry.price
-#         if old_price > Tracker(url).price:
-#             button = [{"type": "web_url", "url": url,
-#                        "title": "Check out item"}]
-#             bot.send_button_message(recipient_id, message, button)
+def check_price(recipient_id):
+    message = 'Price dropped! Check out this link.'
+    target = Price.query.filter_by(user=recipient_id).all()
+    for entry in target:
+        url = entry.url
+        old_price = entry.price
+        if old_price > Tracker(url).price:
+            button = [{"type": "web_url", "url": url,
+                       "title": "Check out item"}]
+            bot.send_button_message(recipient_id, message, button)
 
 
-# cron = BackgroundScheduler(daemon=True)
+cron = BackgroundScheduler(daemon=True)
 # cron.add_job(check_price, 'cron', args=[recipient_id], hour=8, timezone='UTC')
-# cron.start()
-# atexit.register(lambda: cron.shutdown())
+cron.add_job(check_price, 'interval', args=[recipient_id], seconds=10)
+cron.start()
+atexit.register(lambda: cron.shutdown())
 
 
 if __name__ == '__main__':
