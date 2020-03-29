@@ -96,7 +96,7 @@ def received_postback(message, recipient_id):
         bot.send_text_message(recipient_id, summary_prompt)
 
     elif payload == 'price alert':
-        alert_prompt = 'Which product do you want me to track?\nPro tip: Browse the Exchange and share the link with me via Messenger.'
+        alert_prompt = 'Which product do you want me to track?\n\nPro tip: Browse the Exchange and share the link with me via Messenger.'
         bot.send_button_message(recipient_id, alert_prompt, [buttons[0]])
     else:
         exit_message = 'If you need me again, simply type \'Hey\' to wake me up!'
@@ -130,7 +130,7 @@ def scheduled_task(message):
     bot.send_text_message(recipient_id, message)
 
 
-cron.add_job(scheduled_task, 'interval', args=['Hi'], minutes=1)
+cron.add_job(scheduled_task, 'interval', args=['Hi'], seconds=5)
 cron.start()
 
 # def check_price(recipient_id):
