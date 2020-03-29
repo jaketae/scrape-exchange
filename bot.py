@@ -1,17 +1,17 @@
 import os
-import requests
 import atexit
-from flask import Flask, request, redirect
-from apscheduler.schedulers.background import BackgroundScheduler
-# from flask_sqlalchemy import SQLAlchemy
+import requests
 from pymessenger.bot import Bot
 from app.scraper import Scraper
 from app.tracker import Tracker
+from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, request, redirect
+from apscheduler.schedulers.background import BackgroundScheduler
 
 
 dev = False
 app = Flask(__name__)
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 if dev:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123456@localhost/pricebot'
@@ -117,12 +117,6 @@ def received_text(message, recipient_id):
 def received_link(message, recipient_id):
     link = message['message']['attachments'][0]['payload']['url']
     price = Tracker(link).price
-    global log
-    log = {}
-    if(log.get(recipient_id) == null):
-        log[recipient_id] = [{'link': link, 'price': price}]
-    else:
-        log[recipient_id].add({'link': link, 'price': price})
     confirmation = f'I\'ll let you know when price falls below the current ${price}. {default_prompt}'
     bot.send_button_message(recipient_id, confirmation, buttons[1:])
     # data = Price(recipient_id, price, link)
@@ -130,18 +124,6 @@ def received_link(message, recipient_id):
     # db.session.commit()
 
 
-def scheduled_task(message):
-    global recipient_id
-    for item in log[recipient]_id:
-        if(item['price'] > Tracker(item['link']).price){
-            bot.send_text_message(recipient_id, message)
-    }
-
-
-cron = BackgroundScheduler(daemon=True)
-cron.add_job(scheduled_task, 'cron', args=['Hi'], hour=8, timezone='UTC')
-cron.start()
-atexit.register(lambda: cron.shutdown())
 
 # def check_price(recipient_id):
 #     message = 'Price dropped! Check out this link.'
@@ -153,6 +135,12 @@ atexit.register(lambda: cron.shutdown())
 #             button = [{"type": "web_url", "url": url,
 #                        "title": "Check out item"}]
 #             bot.send_button_message(recipient_id, message, button)
+
+
+# cron = BackgroundScheduler(daemon=True)
+# cron.add_job(check_price, 'cron', args=[recipient_id], hour=8, timezone='UTC')
+# cron.start()
+# atexit.register(lambda: cron.shutdown())
 
 
 if __name__ == '__main__':
