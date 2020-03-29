@@ -12,17 +12,10 @@ from apscheduler.schedulers.background import BackgroundScheduler
 dev = False
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-if dev:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123456@localhost/pricebot'
-    ACCESS_TOKEN = 'EAADgVEsrncIBAMYo5ZByh97atuawSDMucDv7Ql9kZA1pbPTpviZCxf65QDEgwCZAeYTMSfRD0UWddkRHUDMZBg8imFh04ZAQycRQt3KOtC047pWRqjoGnrzwj6i0Swer6GGQ0TU3J3p8ttKCoR89ZAMZAdaitTwItYjsnnNd7dhxwtYb97doKj2QlgQhcYG8ZBEcZD'
-    VERIFY_TOKEN = 'UNIQUE TOKEN'
-else:
-    # app.config['SQLALCHEMY_DATABASE_URI'] = ''
-    ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
-    VERIFY_TOKEN = os.environ['VERIFY_TOKEN']
-
-# db = SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
+VERIFY_TOKEN = os.environ['VERIFY_TOKEN']
+db = SQLAlchemy(app)
 bot = Bot(ACCESS_TOKEN, api_version=6.0)
 request_endpoint = f'{bot.graph_url}/me/messenger_profile'
 gs_obj = {"get_started": {"payload": "get started"}}
@@ -43,17 +36,17 @@ buttons = [
 ]
 
 
-# class Price(db.Model):
-#     __tablename__ = 'price'
-#     id = db.Column(db.Integer, primary_key=True)
-#     user = db.Column(db.String(200))
-#     price = db.Column(db.Float)
-#     url = db.Column(db.String(200))
+class Price(db.Model):
+    __tablename__ = 'price'
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.String(200))
+    price = db.Column(db.Float)
+    url = db.Column(db.String(200))
 
-#     def __init__(self, price, url):
-#         self.user = user
-#         self.price = price
-#         self.url = url
+    def __init__(self, price, url):
+        self.user = user
+        self.price = price
+        self.url = url
 
 
 @app.route('/', methods=['GET'])
@@ -119,9 +112,9 @@ def received_link(message, recipient_id):
     price = Tracker(link).price
     confirmation = f'I\'ll let you know when price falls below the current ${price}. {default_prompt}'
     bot.send_button_message(recipient_id, confirmation, buttons[1:])
-    # data = Price(recipient_id, price, link)
-    # db.session.add(data)
-    # db.session.commit()
+    data = Price(recipient_id, price, link)
+    db.session.add(data)
+    db.session.commit()
 
 
 
