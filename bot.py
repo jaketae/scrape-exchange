@@ -1,5 +1,6 @@
 import os
 import requests
+import atexit
 from flask import Flask, request, redirect
 from apscheduler.schedulers.background import BackgroundScheduler
 # from flask_sqlalchemy import SQLAlchemy
@@ -125,13 +126,17 @@ def received_link(message, recipient_id):
     # db.session.commit()
 
 
+g
+
+
+@cron.scheduled_job('interval', seconds='10')
 def scheduled_task(message):
     global recipient_id
     bot.send_text_message(recipient_id, message)
 
 
-cron.add_job(scheduled_task, 'interval', args=['Hi'], seconds=5)
 cron.start()
+atexit.register(lambda: cron.shutdown())
 
 # def check_price(recipient_id):
 #     message = 'Price dropped! Check out this link.'
