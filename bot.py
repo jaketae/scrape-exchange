@@ -117,7 +117,8 @@ def received_text(message, recipient_id):
 def received_link(message, recipient_id):
     link = message['message']['attachments'][0]['payload']['url']
     price = Tracker(link).price
-    #log[recipient_id] = {link : price}
+    global log
+    log[recipient_id] = {link : price}
     confirmation = f'I\'ll let you know when price falls below the current ${price}. {default_prompt}'
     bot.send_button_message(recipient_id, confirmation, buttons[1:])
     # data = Price(recipient_id, price, link)
@@ -127,7 +128,9 @@ def received_link(message, recipient_id):
 
 def scheduled_task(message):
     global recipient_id
-    bot.send_text_message(recipient_id, message)
+    if(log[recipient_id][link] > Tracker(log[recipient_id].key).price){
+        bot.send_text_message(recipient_id, message)
+    }
 
 
 cron = BackgroundScheduler(daemon=True)
