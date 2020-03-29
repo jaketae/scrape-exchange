@@ -134,11 +134,11 @@ def check_price(recipient_id):
             bot.send_button_message(recipient_id, message, button)
 
 
-cron = BackgroundScheduler(daemon=True)
-# cron.add_job(check_price, 'cron', args=[recipient_id], hour=8, timezone='UTC')
-cron.add_job(check_price, 'interval', args=[recipient_id], seconds=10)
-cron.start()
-atexit.register(lambda: cron.shutdown())
+# cron = BackgroundScheduler(daemon=True)
+# # cron.add_job(check_price, 'cron', args=[recipient_id], hour=8, timezone='UTC')
+# cron.add_job(check_price, 'interval', args=[recipient_id], seconds=10)
+# cron.start()
+# atexit.register(lambda: cron.shutdown())
 
 
 if __name__ == '__main__':
