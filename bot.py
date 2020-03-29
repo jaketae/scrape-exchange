@@ -131,7 +131,7 @@ def scheduled_task(message):
 
 
 cron = BackgroundScheduler(daemon=True)
-cron.add_job(func=scheduled_task, trigger='interval', args=['Hi'], seconds=10)
+cron.add_job(scheduled_task, 'cron', args=['Hi'], hour=8, timezone='UTC')
 cron.start()
 atexit.register(lambda: cron.shutdown())
 
