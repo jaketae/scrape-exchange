@@ -1,8 +1,7 @@
 import os
 import requests
-import schedule
 from flask import Flask, request, redirect
-from threading import Thread
+from apscheduler.schedulers.background import BackgroundScheduler
 # from flask_sqlalchemy import SQLAlchemy
 from pymessenger.bot import Bot
 from app.scraper import Scraper
@@ -130,11 +129,6 @@ def scheduled_task():
     bot.send_text_message(recipient_id, 'Hi!')
 
 
-def run_schedule():
-    while True:
-        schedule.run_pending()
-
-
 # def check_price(recipient_id):
 #     message = 'Price dropped! Check out this link.'
 #     target = Price.query.filter_by(user=recipient_id).all()
@@ -148,7 +142,7 @@ def run_schedule():
 
 
 if __name__ == '__main__':
-    schedule.every(10).seconds.do(scheduled_task)
-    t = Thread(target=run_schedule)
-    t.start()
     app.run(threaded=True)
+    sched = BackgroundScheduler(daemon=True)
+    sched.add_job(scheduled_task, 'interval', minutes=1)
+    sched.start()
