@@ -11,7 +11,6 @@ from app.tracker import Tracker
 dev = False
 app = Flask(__name__)
 cron = BackgroundScheduler(daemon=True)
-cron.start()
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 if dev:
@@ -97,7 +96,7 @@ def received_postback(message, recipient_id):
         bot.send_text_message(recipient_id, summary_prompt)
 
     elif payload == 'price alert':
-        alert_prompt = 'What is the URL of the product you want me to track?'
+        alert_prompt = 'Which product do you want me to track?\nPro tip: Browse the Exchange and share the link with me via Messenger.'
         bot.send_button_message(recipient_id, alert_prompt, [buttons[0]])
     else:
         exit_message = 'If you need me again, simply type \'Hey\' to wake me up!'
@@ -126,11 +125,13 @@ def received_link(message, recipient_id):
     # db.session.commit()
 
 
-@cron.interval_schedule(seconds=10)
-def scheduled_task():
+def scheduled_task(message):
     global recipient_id
-    bot.send_text_message(recipient_id, 'Hi!')
+    bot.send_text_message(recipient_id, message)
 
+
+cron.add_job(scheduled_task, 'interval', args=['Hi'], minutes=1)
+cron.start()
 
 # def check_price(recipient_id):
 #     message = 'Price dropped! Check out this link.'
