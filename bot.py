@@ -2,6 +2,7 @@ import os
 import requests
 import schedule
 from flask import Flask, request, redirect
+from threading import Thread
 # from flask_sqlalchemy import SQLAlchemy
 from pymessenger.bot import Bot
 from app.scraper import Scraper
