@@ -11,7 +11,6 @@ from app.tracker import Tracker
 
 dev = False
 app = Flask(__name__)
-cron = BackgroundScheduler(daemon=True)
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 if dev:
@@ -126,12 +125,13 @@ def received_link(message, recipient_id):
     # db.session.commit()
 
 
-@cron.scheduled_job('interval', seconds=10)
 def scheduled_task(message):
     global recipient_id
     bot.send_text_message(recipient_id, message)
 
 
+cron = BackgroundScheduler(daemon=True)
+cron.add_job(func=scheduled_task, trigger='interval', args=['Hi'], seconds=10)
 cron.start()
 atexit.register(lambda: cron.shutdown())
 
