@@ -1,5 +1,6 @@
 import os
 import requests
+import schedule
 from flask import Flask, request, redirect
 # from flask_sqlalchemy import SQLAlchemy
 from pymessenger.bot import Bot
@@ -26,6 +27,7 @@ request_endpoint = f'{bot.graph_url}/me/messenger_profile'
 gs_obj = {"get_started": {"payload": "get started"}}
 _ = requests.post(request_endpoint, params=bot.auth_args, json=gs_obj)
 
+recipient_id = ''
 default_prompt = 'What next?'
 return_prompt = 'Welcome back! How can I help?'
 buttons = [
@@ -66,6 +68,7 @@ def respond():
     output = request.get_json()
     for event in output['entry']:
         for message in event['messaging']:
+            global recipient_id
             recipient_id = message['sender']['id']
             if message.get('postback'):
                 received_postback(message, recipient_id)
@@ -116,19 +119,22 @@ def received_link(message, recipient_id):
     #log[recipient_id] = {link : price}
     confirmation = f'I\'ll let you know when price falls below the current ${price}. {default_prompt}'
     bot.send_button_message(recipient_id, confirmation, buttons[1:])
-    #while True:
-    #    if price > Tracker(link).price:
-    #        update = 'Price dropped! Check out this link.'
-    #        log[recipient_id][link] = Tracker(link).price
-    #        bot.send_button_message(recipient_id, update, buttons[1:])
-    #
-    #    time.sleep(7 * 24 * 60 * 60)
     # data = Price(recipient_id, price, link)
     # db.session.add(data)
     # db.session.commit()
 
 
-# def check_price(recipident_id):
+def scheduled_task():
+    global recipient_id
+    bot.send_text_message(recipient_id, 'Hi!')
+
+
+def run_schedule():
+    while True:
+        schedule.run_pending()
+
+
+# def check_price(recipient_id):
 #     message = 'Price dropped! Check out this link.'
 #     target = Price.query.filter_by(user=recipient_id).all()
 #     for entry in target:
@@ -141,4 +147,7 @@ def received_link(message, recipient_id):
 
 
 if __name__ == '__main__':
+    schedule.every(10).seconds.do(scheduled_task)
+    t = Thread(target=run_schedule)
+    t.start()
     app.run(threaded=True)
