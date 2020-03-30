@@ -118,7 +118,7 @@ def received_link(message, recipient_id):
 
 def check_price():
     message = 'Price dropped! Check out this link.'
-    for user in Price.query.with_entities(Price.user):
+    for user in Price.query.with_entities(Price.user).all():
         for entry in Price.query.filter_by(user).all():
             # if entry.price > Tracker(entry.url).price:
             if entry.price == Tracker(entry.url).price:
