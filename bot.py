@@ -10,9 +10,9 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 
 app = Flask(__name__)
-db = SQLAlchemy(app)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+db = SQLAlchemy(app)
 
 bot = Bot(os.environ['ACCESS_TOKEN'], api_version=6.0)
 request_endpoint = f'{bot.graph_url}/me/messenger_profile'
