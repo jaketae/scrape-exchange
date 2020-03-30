@@ -120,7 +120,7 @@ def check_price():
     # message = 'Price dropped! Check out this link.'
     message = 'Price remains unchanged.'
     for user in db.session.query(Price.user):
-        for entry in Price.query.filter_by(Price.user == user).all():
+        for entry in Price.query.filter_by(user=user).all():
             # if entry.price > Tracker(entry.url).price:
             if entry.price == Tracker(entry.url).price:
                 button = [{"type": "web_url", "url": entry.url,
