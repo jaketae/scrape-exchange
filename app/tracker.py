@@ -1,31 +1,31 @@
-import bs4
 import requests
-from app.utils import redirect, floatify
+
+import bs4
+from app.utils import floatify, redirect
 
 
 class Tracker:
-
     def __init__(self, url):
-        url = redirect(url)
-        page = requests.get(url)
-        self.soup = bs4.BeautifulSoup(page.text, 'lxml')
+        self.url = redirect(url)
+        page = requests.get(self.url)
+        self.soup = bs4.BeautifulSoup(page.text, "lxml")
 
     @property
     def price(self):
-        soup = self.soup
-        item = soup.find(
-            "div", {"class": "aafes-pdp-price mt-1 jsRenderedPrice"})
+        item = self.soup.find("div", {"class": "aafes-pdp-price mt-1 jsRenderedPrice"})
         try:
-            price = ''.join(item.find(
-                "div", {"class": "aafes-price-sale"}).text.strip().replace(' Sale', '').split())
+            price = "".join(
+                item.find("div", {"class": "aafes-price-sale"})
+                .text.strip()
+                .replace(" Sale", "")
+                .split()
+            )
         except:
             try:
-                price = item.find(
-                    "div", {"class": "aafes-price"}).text.strip()
+                price = item.find("div", {"class": "aafes-price"}).text.strip()
             except:
                 try:
-                    price = item.find(
-                        "div", {"class": "aafes-price-sm"}).text.strip()
+                    price = item.find("div", {"class": "aafes-price-sm"}).text.strip()
                 except:
                     price = 0
         return floatify(price)
