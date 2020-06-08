@@ -109,7 +109,7 @@ def received_link(message, recipient_id):
     tracker = Tracker(link)
     confirmation = f"I'll let you know when price falls below the current ${tracker.price}. {default_prompt}"
     bot.send_button_message(recipient_id, confirmation, buttons[1:])
-    data = Price(recipient_id, tracker.price, tracker.link)
+    data = Price(recipient_id, tracker.price, tracker.url)
     db.session.add(data)
     db.session.commit()
 
