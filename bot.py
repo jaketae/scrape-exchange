@@ -12,9 +12,6 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
 db.init_app(app)
-db.drop_all()
-db.create_all()
-
 
 bot = Bot(os.environ["ACCESS_TOKEN"], api_version=6.0)
 request_endpoint = f"{bot.graph_url}/me/messenger_profile"
@@ -33,6 +30,10 @@ buttons = [
     {"type": "postback", "title": "Set up price alert", "payload": "price alert"},
     {"type": "postback", "title": "Exit conversation", "payload": "exit"},
 ]
+
+with app.app_context():
+    db.drop_all()
+    db.create_all()
 
 
 @app.route("/", methods=["GET"])
