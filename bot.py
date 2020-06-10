@@ -32,7 +32,6 @@ buttons = [
 
 
 db = SQLAlchemy(app)
-db.drop_all()
 
 track = db.Table(
     "track",
