@@ -12,8 +12,8 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
 db.init_app(app)
-# db.drop_all()
-# db.create_all()
+db.drop_all()
+db.create_all()
 
 
 bot = Bot(os.environ["ACCESS_TOKEN"], api_version=6.0)
