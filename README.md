@@ -6,30 +6,18 @@ This is a simple web scraper-turned-chatbot for [PX Exchange](http://www.shopmye
 
 The Exchange often holds bulk sales on multiple items without prior notice, making it difficult for people to purchase items at their cheapest price points. When people hear about ongoing sales and browse the website, they often realize to their dismay that the sale has already expired. 
 
-## Functionality
+# Setup
 
-As it stands, the program is able to scrape contents of the Exchange website given a specified keyword. It will return a summary of the items matching the keyword alongside its price, all on a single table. 
-
-Known Bugs:
-- None at the moment, please feel free to file an issue or a PR
-
-Fixed Bugs (v.2020.03.21):
-- The scraper fails when an item is sold out
-- "Log in for Exchange pricing" hinders scraping
-
-Features to Come:
-- Inform the user via email whenever a price change occurs for any given item in the wish list
-- Allow users to narrow down their search (*e.g.* prevent airpods cases from showing up)
-
-## Setup
-
-As it stands, the application requires the following dependencies:
+The application requires the following dependencies:
 
 ```
-bs4
-flask
-requests
-pymessenger
+beautifulsoup4==4.8.2
+Flask==1.1.1
+flask-sqlalchemy==2.4.1
+gunicorn==20.0.4
+lxml==4.5.0
+psycopg2==2.8.4
+pymessenger==0.0.7.0
 ```
 
 To clone the repository, navigate into a directory and run
@@ -37,6 +25,33 @@ To clone the repository, navigate into a directory and run
 ```bash
 git clone https://github.com/jaketae/scrape-exchange.git
 ```
+
+## Release Notes
+
+As it stands, users are able to use the chatbot to obtain a price summary of items given a keyword (demo screenshot shown below), and also ask the chatbot to track a specific product given a URL. If the price changes, the bot will send a text message to the user.
+
+
+v.2020.03.2X:
+* Initialize the repository
+* Implement basic price scraping functionality via `scraper.py`
+* Attempt email updates to users via `smtp`
+
+v.2020.03.3X:
+* Add `tracker.py` for price tracking
+* Use `Flask` and `pymessenger` to shift the project to a chatbot
+* Deploy application to Heroku 
+* Attempt database initialization and integration with PostgreSQL
+
+v.2020.06.0X:
+* Reorganize DB schema from a single table to a many-to-many model
+* Make full use of `flask-sqlalchemy` for full-fledged price tracking
+* Use GitHub Actions for DB update cron job
+
+
+## Contributing
+
+Please feel free to submit an issue or a pull request, should you find any bugs or rooms for improvement. The code style is dictated by [black](https://pypi.org/project/black/#installation-and-usage). 
+
 
 ## Example
 
