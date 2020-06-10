@@ -6,7 +6,6 @@ from app.scraper import Scraper
 from app.tracker import Tracker
 from flask import Flask, redirect, request
 from flask_sqlalchemy import SQLAlchemy
-# from models import *
 from pymessenger.bot import Bot
 
 app = Flask(__name__)

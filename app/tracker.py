@@ -29,6 +29,3 @@ class Tracker:
                 except:
                     price = 0
         return floatify(price)
-
-    def check_price(self, old_price):
-        return old_price > self.price

@@ -4,17 +4,16 @@ from bot import Item, User, bot, db
 
 def cron_job():
     for item in db.session.query(Item).all():
-        tracker = Tracker(item.url)
-        if item.price != tracker.price:
-            item.price = tracker.price
+        current_price = Tracker(item.url).price
+        if item.price != current_price:
+            item.price = current_price
             db.session.commit()
             for user in item.users:
-                update_user(user.messenger_id, item.url)
+                update_user(user.messenger_id, item.url, current_price)
 
 
-def update_user(messenger_id, url):
-    # TODO: show prev_price, new_price
-    message = f"Price dropped! Checkout at {url}"
+def update_user(messenger_id, url, price):
+    message = f"Price dropped to ${price}! Checkout at {url}."
     bot.send_text_message(messenger_id, message)
 
 
