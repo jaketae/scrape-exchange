@@ -45,7 +45,7 @@ track = db.Table(
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     messenger_id = db.Column(db.String(200), nullable=False)
-    items = db.relationship("Item", secondary="track", backref="users", lazy="True")
+    items = db.relationship("Item", secondary="track", backref="users")
 
 
 class Item(db.Model):
