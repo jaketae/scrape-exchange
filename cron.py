@@ -7,9 +7,9 @@ def cron_job():
         tracker = Tracker(item.url)
         if item.price != tracker.price:
             item.price = tracker.price
-            url = item.url
+            db.session.commit()
             for user in item.users:
-                update_user(user.messenger_id, url)
+                update_user(user.messenger_id, item.url)
 
 
 def update_user(messenger_id, url):
