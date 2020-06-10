@@ -136,7 +136,7 @@ def get_item(url):
     if query_result:
         return query_result
     tracker = Tracker(url)
-    item = Item(price=tracker.price, url=url)
+    item = Item(price=tracker.price, url=tracker.url)
     db.session.add(item)
     db.session.commit()
     return item
