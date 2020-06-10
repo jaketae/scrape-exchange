@@ -9,7 +9,7 @@ def cron_job():
             item.price = current_price
             db.session.commit()
             for user in item.users:
-                update_user(user.messenger_id, item.url, current_price)
+                alert_user(user.messenger_id, item.url, current_price)
         else:
             for user in item.users:
                 inform_user(user.messenger_id)
