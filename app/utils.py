@@ -35,11 +35,21 @@ def floatify(price):
     return price
 
 
-def redirect(url):
-    page = requests.get(url)
-    while url != page.url:
-        url = page.url
-        page = requests.get(url)
-    soup = bs4.BeautifulSoup(page.content, "lxml")
-    url = soup.find("span", class_="_5slv").text
-    return url
+# def redirect(url):
+#     page = requests.get(replace_all(url))
+#     soup = bs4.BeautifulSoup(page.content, "lxml")
+#     url = soup.find("span", class_="_5slv").text
+#     return url
+
+
+def redirect(raw_url):
+    replace = {
+        "https://l.messenger.com/l.php?u=": "",
+        "%3A": ":",
+        "%2F": "/",
+        "%3F": "?",
+        "%3D": "=",
+    }
+    for key, value in replace.items():
+        raw_url = raw_url.replace(key, value)
+    return raw_url[: raw_url.index("&h")]
