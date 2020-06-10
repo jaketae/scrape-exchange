@@ -45,6 +45,7 @@ def floatify(price):
 def redirect(raw_url):
     replace = {
         "https://l.messenger.com/l.php?u=": "",
+        "https://l.facebook.com/l.php?u=": "",
         "%3A": ":",
         "%2F": "/",
         "%3F": "?",
