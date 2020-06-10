@@ -5,13 +5,16 @@ import requests
 from app.scraper import Scraper
 from app.tracker import Tracker
 from flask import Flask, redirect, request
-from flask_sqlalchemy import SQLAlchemy
+from models import *
 from pymessenger.bot import Bot
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
-db = SQLAlchemy(app)
+db.init_app(app)
+# db.drop_all()
+# db.create_all()
+
 
 bot = Bot(os.environ["ACCESS_TOKEN"], api_version=6.0)
 request_endpoint = f"{bot.graph_url}/me/messenger_profile"
@@ -30,24 +33,6 @@ buttons = [
     {"type": "postback", "title": "Set up price alert", "payload": "price alert"},
     {"type": "postback", "title": "Exit conversation", "payload": "exit"},
 ]
-
-
-class Price(db.Model):
-    __tablename__ = "price"
-
-    id = db.Column(db.Integer, primary_key=True)
-    user = db.Column(db.String(200))
-    price = db.Column(db.Float)
-    url = db.Column(db.String(500))
-
-    def __init__(self, user, price, url):
-        self.user = user
-        self.price = price
-        self.url = url
-
-
-db.drop_all()
-db.create_all()
 
 
 @app.route("/", methods=["GET"])
@@ -105,26 +90,34 @@ def received_text(message, recipient_id):
 
 
 def received_link(message, recipient_id):
-    link = message["message"]["attachments"][0]["payload"]["url"]
-    tracker = Tracker(link)
-    confirmation = f"I'll let you know when price falls below the current ${tracker.price}. {default_prompt}"
+    url = message["message"]["attachments"][0]["payload"]["url"]
+    confirmation = "I'll let you know when the price drops!"
     bot.send_button_message(recipient_id, confirmation, buttons[1:])
-    data = Price(recipient_id, tracker.price, tracker.url)
-    db.session.add(data)
+    item = get_item(url)
+    user = get_user(recipient_id)
+    item.users.append(user)
     db.session.commit()
 
 
-def check_price():
-    # message = 'Price dropped! Check out this link.'
-    message = "Price remains unchanged."
-    for user in db.session.query(Price.user):
-        for entry in Price.query.filter_by(user=user).all():
-            # if entry.price > Tracker(entry.url).price:
-            if entry.price == Tracker(entry.url).price:
-                button = [
-                    {"type": "web_url", "url": entry.url, "title": "Check out item"}
-                ]
-                bot.send_button_message(user, message, button)
+def get_user(messenger_id):
+    query_result = db.session.query(User).filter_by(messenger_id=messenger_id).first()
+    if query_result:
+        return query_result
+    user = User(messenger_id=messenger_id)
+    db.session.add(user)
+    db.session.commit()
+    return user
+
+
+def get_item(url):
+    query_result = db.session.query(Item).filter_by(url=url).first()
+    if query_result:
+        return query_result
+    tracker = Tracker(url)
+    item = Item(price=tracker.price, url=url)
+    db.session.add(item)
+    db.session.commit()
+    return item
 
 
 if __name__ == "__main__":
