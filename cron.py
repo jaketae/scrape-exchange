@@ -1,5 +1,5 @@
 from app.tracker import Tracker
-from bot import bot, db
+from bot import Item, User, bot, db
 
 
 def cron_job():
