@@ -5,7 +5,6 @@ from bot import Item, User, bot, db
 def cron_job():
     for item in db.session.query(Item).all():
         tracker = Tracker(item.url)
-        print(item.url)
         if item.price != tracker.price:
             item.price = tracker.price
             url = item.url

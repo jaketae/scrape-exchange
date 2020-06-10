@@ -35,14 +35,9 @@ def floatify(price):
     return price
 
 
-# def redirect(url):
-#     page = requests.get(replace_all(url))
-#     soup = bs4.BeautifulSoup(page.content, "lxml")
-#     url = soup.find("span", class_="_5slv").text
-#     return url
-
-
 def redirect(raw_url):
+    if not ("messenger.com" in raw_url or "facebook.com" in raw_url):
+        return raw_url
     replace = {
         "https://l.messenger.com/l.php?u=": "",
         "https://l.facebook.com/l.php?u=": "",
