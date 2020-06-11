@@ -27,6 +27,11 @@ buttons = [
     {"type": "postback", "title": "Check out item price", "payload": "price summary"},
     {"type": "postback", "title": "Set up price alert", "payload": "price alert"},
     {"type": "postback", "title": "Exit conversation", "payload": "exit"},
+    {
+        "type": "postback",
+        "title": "Stop price tracking item(s)",
+        "payload": "stop track",
+    },
 ]
 
 
@@ -93,9 +98,42 @@ def received_postback(message, recipient_id):
     elif payload == "price alert":
         alert_prompt = "Which product do you want me to track?\n\nPro tip: Browse the Exchange and share the link with me via Messenger."
         bot.send_button_message(recipient_id, alert_prompt, [buttons[0]])
-    else:
+    elif payload == "exit":
         exit_message = "If you need me again, simply type 'Hey' to wake me up!"
         bot.send_text_message(recipient_id, exit_message)
+    elif payload == "stop track":
+        stop_message = "Which item(s) do you want me to stop tracking?"
+        bot.send_button_message(recipient_id, stop_message, make_buttons(recipient_id))
+    else:
+        bot.send_text_message(
+            recipient_id, f"I'll stop tracking {payload} as requested!"
+        )
+        stop_track(recipient_id, payload)
+
+
+def make_buttons(messenger_id):
+    items = User.query.filter_by(messenger_id=messenger_id).first().items
+    buttons = [
+        {"type": "postback", "title": item.title, "payload": item.title}
+        for item in items
+    ]
+    buttons.append(
+        {"type": "postback", "title": "Stop tracking all", "payload": "all items"}
+    )
+    return buttons
+
+
+def stop_track(messenger_id, item_title):
+    user = db.session.query(User).filter_by(messenger_id=messenger_id).first()
+    if item_title == "all items":
+        user.items = []
+    else:
+        item = db.session.query.filter_by(title=item_title).first()
+        rel = db.session.query(track).filter_by(user_id=user.id, item_id=item.id)
+        db.session.delete(rel)
+        if not len(item.users):
+            db.session.delete(item)
+    db.session.commit()
 
 
 def received_text(message, recipient_id):
