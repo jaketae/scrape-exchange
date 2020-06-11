@@ -43,7 +43,9 @@ track = db.Table(
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     messenger_id = db.Column(db.BigInteger, nullable=False)
-    items = db.relationship("Item", secondary="track", backref="users")
+    items = db.relationship(
+        "Item", cascade="all,delete", secondary="track", backref="users"
+    )
 
 
 class Item(db.Model):
@@ -123,6 +125,7 @@ def send_item_buttons(messenger_id):
                 {"type": "postback", "title": item.title, "payload": item.title}
             )
             if i % 3 == 2:
+                print(buttons)
                 bot.send_button_message(messenger_id, message, buttons)
                 buttons = []
                 message = ""
