@@ -6,6 +6,7 @@ from src.utils import floatify, parse, redirect, stringify
 
 def get_item_info(url):
     url = redirect(url)
+    print(url)
     page = requests.get(url)
     soup = bs4.BeautifulSoup(page.text, "lxml")
     title = soup.find("h1", class_="aafes-page-head mb-0").text
