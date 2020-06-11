@@ -1,5 +1,7 @@
 # PX Exchange Chatbot
 
+![Update database](https://github.com/jaketae/scrape-exchange/workflows/Update%20database/badge.svg)
+
 https://web.facebook.com/pxpricebot/
 
 This is a simple web scraper-turned-chatbot for [PX Exchange](http://www.shopmyexchange.com), a shopping website for U.S. soldiers and veterans. The chatbot, which runs on Facebook's Messenger platform, provides a convenient way for users to inquire about product prices and price changes on a real-time basis.
