@@ -2,10 +2,11 @@ import os
 
 import requests
 
-from crawler import get_price, get_summary
 from flask import Flask, redirect, request
 from flask_sqlalchemy import SQLAlchemy
 from pymessenger.bot import Bot
+
+from .crawler import get_price, get_summary
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
