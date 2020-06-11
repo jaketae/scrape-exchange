@@ -47,7 +47,7 @@ class User(db.Model):
 
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50), nullabe=False)
+    title = db.Column(db.String(50), nullable=False)
     price = db.Column(db.Float, nullable=False)
     url = db.Column(db.String(500), nullable=False)
 
