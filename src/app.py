@@ -35,14 +35,14 @@ db = SQLAlchemy(app)
 
 track = db.Table(
     "track",
-    db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
-    db.Column("item_id", db.Integer, db.ForeignKey("item.id")),
+    db.Column("user_id", db.Integer, db.ForeignKey("user.id"), primary_key=True),
+    db.Column("item_id", db.Integer, db.ForeignKey("item.id"), primary_key=True),
 )
 
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    messenger_id = db.Column(db.Integer, nullable=False)
+    messenger_id = db.Column(db.BigInteger, nullable=False)
     items = db.relationship("Item", secondary="track", backref="users")
 
 
@@ -156,6 +156,15 @@ def received_text(message, recipient_id):
 
 def received_link(message, recipient_id):
     url = message["message"]["attachments"][0]["payload"]["url"]
+    item = get_item(url)
+    confirmation = f"I'll let you know when {item.title} get's cheaper!"
+    bot.send_button_message(recipient_id, confirmation, buttons[1:])
+    user = get_user(recipient_id)
+    item.users.append(user)
+    db.session.commit()
+
+
+def test_received_link(url, recipient_id):
     item = get_item(url)
     confirmation = f"I'll let you know when {item.title} get's cheaper!"
     bot.send_button_message(recipient_id, confirmation, buttons[1:])
