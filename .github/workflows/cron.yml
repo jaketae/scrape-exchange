@@ -23,14 +23,3 @@ jobs:
           VERIFY_TOKEN: ${{ secrets.VERIFY_TOKEN }}
         run: |
           python cron.py
-      - name: Commit files
-        run: |
-          git config --local user.email "jaesungtae@gmail.com"
-          git config --local user.name "CommitBot"
-          git add .
-          git commit -m "update: fetch and update db"
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          branch: 'master'
-          github_token: ${{ secrets.GITHUB_TOKEN }}
