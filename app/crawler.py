@@ -1,7 +1,7 @@
 import requests
 
 import bs4
-from src.utils import floatify, parse, redirect, stringify
+from app.utils import floatify, parse, redirect, stringify
 
 
 def get_item_info(url):

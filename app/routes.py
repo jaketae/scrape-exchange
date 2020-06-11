@@ -2,14 +2,11 @@ import os
 
 import requests
 
-from flask import Flask, redirect, request
-from flask_sqlalchemy import SQLAlchemy
+from app import app
+from app.crawler import *
+from app.models import *
+from flask import request
 from pymessenger.bot import Bot
-from src.crawler import *
-
-app = Flask(__name__)
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
 
 bot = Bot(os.environ["ACCESS_TOKEN"], api_version=6.0)
 request_endpoint = f"{bot.graph_url}/me/messenger_profile"
@@ -28,33 +25,6 @@ buttons = [
     # {"type": "postback", "title": "Exit conversation", "payload": "exit"},
     {"type": "postback", "title": "Stop price tracking", "payload": "stop track"},
 ]
-
-
-db = SQLAlchemy(app)
-
-track = db.Table(
-    "track",
-    db.Column("user_id", db.Integer, db.ForeignKey("user.id"), primary_key=True),
-    db.Column("item_id", db.Integer, db.ForeignKey("item.id"), primary_key=True),
-)
-
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    messenger_id = db.Column(db.BigInteger, nullable=False)
-    items = db.relationship(
-        "Item", cascade="all,delete", secondary="track", backref="users"
-    )
-
-
-class Item(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    price = db.Column(db.Float, nullable=False)
-    url = db.Column(db.String(500), nullable=False)
-
-
-db.create_all()
 
 
 @app.route("/", methods=["GET"])
@@ -195,7 +165,3 @@ def get_item(url):
     db.session.add(item)
     db.session.commit()
     return item
-
-
-if __name__ == "__main__":
-    app.run()

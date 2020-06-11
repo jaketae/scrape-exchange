@@ -1,5 +1,7 @@
-from src.app import Item, User, bot, db
-from src.crawler import get_item_info
+from app import db
+from app.crawler import get_item_info
+from app.models import *
+from app.routes import bot
 
 
 def cron_job():
