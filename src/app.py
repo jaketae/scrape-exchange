@@ -131,16 +131,14 @@ def send_item_buttons(messenger_id):
 
 
 def stop_track(messenger_id, item_title):
-    user = db.session.query(User).filter_by(messenger_id=messenger_id).first()
+    user = User.query.filter_by(messenger_id=messenger_id).first()
     if item_title == "all items":
         user.items = []
     else:
-        item = db.session.query(Item).filter_by(title=item_title).first()
-        rel = (
-            db.session.query(track).filter_by(user_id=user.id, item_id=item.id).first()
-        )
+        item = Item.query.filter_by(title=item_title).first()
+        rel = track.query.filter_by(user_id=user.id, item_id=item.id).first()
         db.session.delete(rel)
-        if not len(item.users):
+        if len(item.users) == 0:
             db.session.delete(item)
     db.session.commit()
 
