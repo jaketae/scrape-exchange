@@ -27,7 +27,7 @@ buttons = [
     {"type": "postback", "title": "Check out item price", "payload": "price summary"},
     {"type": "postback", "title": "Set up price alert", "payload": "price alert"},
     # {"type": "postback", "title": "Exit conversation", "payload": "exit"},
-    {"type": "postback", "title": "Stop price tracking", "payload": "stop track",},
+    {"type": "postback", "title": "Stop price tracking", "payload": "stop track"},
 ]
 
 
@@ -118,13 +118,16 @@ def send_item_buttons(messenger_id):
         buttons = []
         message = "Which item(s) do you want me to stop tracking?"
         for i, item in enumerate(items):
+            print(item.title)
             buttons.append(
                 {"type": "postback", "title": item.title, "payload": item.title}
             )
             if i % 3 == 2:
-                bot.send_button_message(recipient_id, message, buttons)
+                bot.send_button_message(messenger_id, message, buttons)
                 buttons = []
                 message = ""
+        if buttons:
+            bot.send_button_message(messenger_id, message, buttons)
 
 
 def stop_track(messenger_id, item_title):
@@ -133,7 +136,9 @@ def stop_track(messenger_id, item_title):
         user.items = []
     else:
         item = db.session.query(Item).filter_by(title=item_title).first()
-        rel = db.session.query(track).filter_by(user_id=user.id, item_id=item.id)
+        rel = (
+            db.session.query(track).filter_by(user_id=user.id, item_id=item.id).first()
+        )
         db.session.delete(rel)
         if not len(item.users):
             db.session.delete(item)
