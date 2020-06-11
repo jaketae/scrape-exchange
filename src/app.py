@@ -16,8 +16,7 @@ request_endpoint = f"{bot.graph_url}/me/messenger_profile"
 gs_obj = {"get_started": {"payload": "get started"}}
 _ = requests.post(request_endpoint, params=bot.auth_args, json=gs_obj)
 
-default_prompt = "What next?"
-return_prompt = "Welcome back! How can I help?"
+
 buttons = [
     {
         "type": "web_url",
@@ -101,8 +100,6 @@ def received_postback(message, recipient_id):
     #     bot.send_text_message(recipient_id, exit_message)
     elif payload == "stop track":
         send_item_buttons(recipient_id)
-        # stop_message = "Which item(s) do you want me to stop tracking?"
-        # bot.send_button_message(recipient_id, stop_message, make_buttons(recipient_id))
     else:
         bot.send_text_message(
             recipient_id, f"I'll stop tracking {payload} as requested!"
@@ -148,13 +145,15 @@ def stop_track(messenger_id, item_title):
 def received_text(message, recipient_id):
     text = message["message"]["text"]
     if "hey" in text.lower():
-        bot.send_button_message(recipient_id, return_prompt, buttons[:-1])
+        bot.send_button_message(
+            recipient_id, "Welcome back! How can I help?", buttons[:-1]
+        )
     elif "bye" in text.lower():
         exit_message = "If you need me again, simply type 'Hey' to wake me up!"
         bot.send_text_message(recipient_id, exit_message)
     else:
         bot.send_text_message(recipient_id, get_summary(text))
-        bot.send_button_message(recipient_id, default_prompt, buttons[1:])
+        bot.send_button_message(recipient_id, "What next?", buttons[1:])
 
 
 def received_link(message, recipient_id):
