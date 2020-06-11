@@ -169,7 +169,7 @@ def received_link(message, recipient_id):
 
 def test_received_link(url, recipient_id):
     item = get_item(url)
-    confirmation = f"I'll let you know when {item.title} get's cheaper!"
+    confirmation = f"I'll let you know when {item.title} gets cheaper!"
     bot.send_button_message(recipient_id, confirmation, buttons[1:])
     user = get_user(recipient_id)
     item.users.append(user)
