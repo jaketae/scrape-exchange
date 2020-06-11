@@ -109,9 +109,9 @@ def received_text(message, recipient_id):
 
 def received_link(message, recipient_id):
     url = message["message"]["attachments"][0]["payload"]["url"]
-    confirmation = "I'll let you know when the price drops!"
-    bot.send_button_message(recipient_id, confirmation, buttons[1:])
     item = get_item(url)
+    confirmation = f"I'll let you know when {item.title} get's cheaper!"
+    bot.send_button_message(recipient_id, confirmation, buttons[1:])
     user = get_user(recipient_id)
     item.users.append(user)
     db.session.commit()
