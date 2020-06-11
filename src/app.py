@@ -42,13 +42,13 @@ track = db.Table(
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    messenger_id = db.Column(db.String(200), nullable=False)
+    messenger_id = db.Column(db.Integer, nullable=False)
     items = db.relationship("Item", secondary="track", backref="users")
 
 
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50), nullable=False)
+    title = db.Column(db.String(200), nullable=False)
     price = db.Column(db.Float, nullable=False)
     url = db.Column(db.String(500), nullable=False)
 
