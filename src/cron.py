@@ -9,19 +9,21 @@ def cron_job():
             item.price = current_price
             db.session.commit()
             for user in item.users:
-                alert_user(user.messenger_id, item.url, current_price)
+                alert_user(user.messenger_id, item)
         else:
             for user in item.users:
-                inform_user(user.messenger_id)
+                inform_user(user.messenger_id, item.title)
 
 
-def alert_user(messenger_id, url, price):
-    message = f"Price dropped to ${price}! Checkout at {url}."
+def alert_user(messenger_id, item):
+    message = (
+        f"Price of {item.title} has dropped to ${item.price}! Checkout at {item.url}."
+    )
     bot.send_text_message(messenger_id, message)
 
 
-def inform_user(messenger_id):
-    message = "No price changes for now!"
+def inform_user(messenger_id, item_title):
+    message = f"No price changes for {item_title} for now!"
     bot.send_text_message(messenger_id, message)
 
 
