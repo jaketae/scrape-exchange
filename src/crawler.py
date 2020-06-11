@@ -5,7 +5,8 @@ from utils import floatify, parse, redirect
 
 
 def get_price(url):
-    page = requests.get(redirect(url))
+    url = redirect(url)
+    page = requests.get(url)
     soup = bs4.BeautifulSoup(page.text, "lxml")
     item = soup.find("div", {"class": "aafes-pdp-price mt-1 jsRenderedPrice"})
     try:
@@ -23,7 +24,7 @@ def get_price(url):
                 price = item.find("div", {"class": "aafes-price-sm"}).text.strip()
             except:
                 price = 0
-    return floatify(price)
+    return floatify(price), url
 
 
 def get_summary(keyword):

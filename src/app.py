@@ -2,8 +2,7 @@ import os
 
 import requests
 
-from app.scraper import Scraper
-from app.tracker import Tracker
+from crawler import get_price, get_summary
 from flask import Flask, redirect, request
 from flask_sqlalchemy import SQLAlchemy
 from pymessenger.bot import Bot
@@ -103,9 +102,7 @@ def received_text(message, recipient_id):
     if "hey" in text.lower():
         bot.send_button_message(recipient_id, return_prompt, buttons[:-1])
     else:
-        scraper = Scraper(text)
-        summary = scraper.scrape()
-        bot.send_text_message(recipient_id, summary)
+        bot.send_text_message(recipient_id, get_summary(text))
         bot.send_button_message(recipient_id, default_prompt, buttons[1:])
 
 
@@ -133,8 +130,8 @@ def get_item(url):
     query_result = db.session.query(Item).filter_by(url=url).first()
     if query_result:
         return query_result
-    tracker = Tracker(url)
-    item = Item(price=tracker.price, url=tracker.url)
+    price, url = get_price(url)
+    item = Item(price=price, url=url)
     db.session.add(item)
     db.session.commit()
     return item

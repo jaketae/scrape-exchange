@@ -1,10 +1,10 @@
-from app.tracker import Tracker
-from bot import Item, User, bot, db
+from app import Item, User, bot, db
+from crawler import get_price
 
 
 def cron_job():
     for item in db.session.query(Item).all():
-        current_price = Tracker(item.url).price
+        current_price, _ = get_price(item.url)
         if item.price != current_price:
             item.price = current_price
             db.session.commit()
