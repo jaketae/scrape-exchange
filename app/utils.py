@@ -13,35 +13,30 @@ replace = {
 
 
 def parse(keyword):
-    keyword = str(keyword).replace(" ", "+")
-    return keyword
+    return str(keyword).replace(" ", "+")
 
 
 def stringify(names, prices):
-    summary = ""
     if len(prices) == 0:
-        summary = "There are no results to show."
-    else:
-        for name, price in zip(names, prices):
-            if price[0] == "$":
-                name = name[:-1]
-                summary += f"{name}: {price}\n\n"
-        if len(summary) == 0:
-            summary = "There are no results to show."
-        else:
-            summary = summary[:-1]
-    return summary
+        return "There are no results to show."
+    summary = ""
+    for name, price in zip(names, prices):
+        if price[0] == "$":
+            name = name[:-1]
+            summary += f"{name}: {price}\n\n"
+    if len(summary) == 0:
+        return "There are no results to show."
+    return summary[:-1]
 
 
 def floatify(price):
     try:
-        price = float(price[1:].replace(",", ""))
+        return float(price[1:].replace(",", ""))
     except:
         try:
-            price = float(price[price.index("-") + 2 :].replace(",", ""))
+            return float(price[price.index("-") + 2 :].replace(",", ""))
         except:
-            pass
-    return price
+            return price
 
 
 def redirect(raw_url):
