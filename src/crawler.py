@@ -1,8 +1,7 @@
 import requests
 
 import bs4
-
-from .utils import floatify, parse, redirect, stringify
+from src.utils import floatify, parse, redirect, stringify
 
 
 def get_price(url):

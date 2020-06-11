@@ -1,5 +1,5 @@
-from app import Item, User, bot, db
-from crawler import get_price
+from src.app import Item, User, bot, db
+from src.crawler import get_price
 
 
 def cron_job():
