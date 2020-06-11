@@ -5,7 +5,7 @@ import requests
 from flask import Flask, redirect, request
 from flask_sqlalchemy import SQLAlchemy
 from pymessenger.bot import Bot
-from src.crawler import get_price, get_summary
+from src.crawler import *
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -47,6 +47,7 @@ class User(db.Model):
 
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(50), nullabe=False)
     price = db.Column(db.Float, nullable=False)
     url = db.Column(db.String(500), nullable=False)
 
@@ -130,8 +131,8 @@ def get_item(url):
     query_result = db.session.query(Item).filter_by(url=url).first()
     if query_result:
         return query_result
-    price, url = get_price(url)
-    item = Item(price=price, url=url)
+    title, price, url = get_item_info(url)
+    item = Item(title=title, price=price, url=url)
     db.session.add(item)
     db.session.commit()
     return item

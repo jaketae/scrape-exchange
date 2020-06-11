@@ -4,10 +4,11 @@ import bs4
 from src.utils import floatify, parse, redirect, stringify
 
 
-def get_price(url):
+def get_item_info(url):
     url = redirect(url)
     page = requests.get(url)
     soup = bs4.BeautifulSoup(page.text, "lxml")
+    title = soup.find("h1", class_="aafes-page-head mb-0").text
     item = soup.find("div", {"class": "aafes-pdp-price mt-1 jsRenderedPrice"})
     try:
         price = "".join(
@@ -24,7 +25,7 @@ def get_price(url):
                 price = item.find("div", {"class": "aafes-price-sm"}).text.strip()
             except:
                 price = 0
-    return floatify(price), url
+    return title, floatify(price), url
 
 
 def get_summary(keyword):
