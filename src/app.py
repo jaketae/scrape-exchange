@@ -26,7 +26,7 @@ buttons = [
     },
     {"type": "postback", "title": "Check out item price", "payload": "price summary"},
     {"type": "postback", "title": "Set up price alert", "payload": "price alert"},
-    {"type": "postback", "title": "Exit conversation", "payload": "exit"},
+    # {"type": "postback", "title": "Exit conversation", "payload": "exit"},
     {
         "type": "postback",
         "title": "Stop price tracking item(s)",
@@ -83,14 +83,14 @@ def respond():
                     received_link(message, recipient_id)
             else:
                 error_message = "Sorry, I don't understand that. Other way I can help?"
-                bot.send_button_message(recipient_id, error_message, buttons[1:])
+                bot.send_button_message(recipient_id, error_message, buttons[:-1])
     return "Message processed"
 
 
 def received_postback(message, recipient_id):
     payload = message["postback"]["payload"]
     if payload == "get started":
-        welcome_text = "Hey there! I'm PX bot. How can I help you?"
+        welcome_text = "Hey there! I'm PX bot. How can I help you? (To exit, you can type 'Bye' anytime.)"
         bot.send_button_message(recipient_id, welcome_text, buttons[:-1])
     elif payload == "price summary":
         summary_prompt = "Type the name of a product you're interested in."
@@ -98,12 +98,13 @@ def received_postback(message, recipient_id):
     elif payload == "price alert":
         alert_prompt = "Which product do you want me to track?\n\nPro tip: Browse the Exchange and share the link with me via Messenger."
         bot.send_button_message(recipient_id, alert_prompt, [buttons[0]])
-    elif payload == "exit":
-        exit_message = "If you need me again, simply type 'Hey' to wake me up!"
-        bot.send_text_message(recipient_id, exit_message)
+    # elif payload == "exit":
+    #     exit_message = "If you need me again, simply type 'Hey' to wake me up!"
+    #     bot.send_text_message(recipient_id, exit_message)
     elif payload == "stop track":
-        stop_message = "Which item(s) do you want me to stop tracking?"
-        bot.send_button_message(recipient_id, stop_message, make_buttons(recipient_id))
+        send_item_buttons(recipient_id)
+        # stop_message = "Which item(s) do you want me to stop tracking?"
+        # bot.send_button_message(recipient_id, stop_message, make_buttons(recipient_id))
     else:
         bot.send_text_message(
             recipient_id, f"I'll stop tracking {payload} as requested!"
@@ -111,16 +112,23 @@ def received_postback(message, recipient_id):
         stop_track(recipient_id, payload)
 
 
-def make_buttons(messenger_id):
+def send_item_buttons(messenger_id):
     items = User.query.filter_by(messenger_id=messenger_id).first().items
-    buttons = [
-        {"type": "postback", "title": item.title, "payload": item.title}
-        for item in items
-    ]
-    buttons.append(
-        {"type": "postback", "title": "Stop tracking all", "payload": "all items"}
-    )
-    return buttons
+    if len(items) == 0:
+        bot.send_text_message(
+            messenger_id, "You haven't asked me to track anything yet."
+        )
+    else:
+        buttons = []
+        message = "Which item(s) do you want me to stop tracking?"
+        for i, item in enumerate(items):
+            buttons.append(
+                {"type": "postback", "title": item.title, "payload": item.title}
+            )
+            if i % 3 == 2:
+                bot.send_button_message(recipient_id, message, buttons)
+                buttons = []
+                message = ""
 
 
 def stop_track(messenger_id, item_title):
@@ -140,6 +148,9 @@ def received_text(message, recipient_id):
     text = message["message"]["text"]
     if "hey" in text.lower():
         bot.send_button_message(recipient_id, return_prompt, buttons[:-1])
+    elif "bye" in text.lower():
+        exit_message = "If you need me again, simply type 'Hey' to wake me up!"
+        bot.send_text_message(recipient_id, exit_message)
     else:
         bot.send_text_message(recipient_id, get_summary(text))
         bot.send_button_message(recipient_id, default_prompt, buttons[1:])
