@@ -136,7 +136,9 @@ def stop_track(messenger_id, item_title):
         user.items = []
     else:
         item = Item.query.filter_by(title=item_title).first()
-        rel = track.query.filter_by(user_id=user.id, item_id=item.id).first()
+        rel = (
+            db.session.query(table).filter_by(user_id=user.id, item_id=item.id).first()
+        )
         db.session.delete(rel)
         if len(item.users) == 0:
             db.session.delete(item)
