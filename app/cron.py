@@ -30,5 +30,6 @@ def inform_user(messenger_id, item_title):
 
 
 if __name__ == "__main__":
+    print("Start!")
     cron_job()
     print("Done!")
