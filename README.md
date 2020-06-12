@@ -1,8 +1,7 @@
-# PX Exchange Chatbot
+# [PX Exchange Chatbot](https://web.facebook.com/pxpricebot/)
 
 ![build](https://github.com/jaketae/scrape-exchange/workflows/Run%20linter/badge.svg) ![cron](https://github.com/jaketae/scrape-exchange/workflows/Update%20database/badge.svg) 
 
-https://web.facebook.com/pxpricebot/
 
 This is a simple web scraper-turned-chatbot for [PX Exchange](http://www.shopmyexchange.com), a shopping website for U.S. soldiers and veterans. The chatbot, which runs on Facebook's Messenger platform, provides a convenient way for users to inquire about product prices and price changes on a real-time basis.
 
@@ -42,10 +41,10 @@ v.2020.03.3X:
 * Deploy application to Heroku 
 * Attempt database initialization and integration with PostgreSQL
 
-v.2020.06.0X:
+v.2020.06.1X:
 * Reorganize DB schema from a single table to a many-to-many model
-* Make full use of `flask-sqlalchemy` for full-fledged price tracking
-* Use GitHub Actions for DB update cron job and lint check
+* Make use of `flask-sqlalchemy` for full-fledged price tracking
+* Use GitHub Actions for DB update cron job, linting, and testing
 * MVP release!
 
 

@@ -3,8 +3,8 @@ import os
 import requests
 
 from app import app
-from app.crawler import *
-from app.models import *
+from app.crawler import get_item_info, get_summary
+from app.models import Item, User, db, track
 from flask import request
 from pymessenger.bot import Bot
 
@@ -59,17 +59,22 @@ def respond():
 def received_postback(message, recipient_id):
     payload = message["postback"]["payload"]
     if payload == "get started":
-        welcome_text = "Hey there! I'm PX bot. How can I help you? (To exit, you can type 'Bye' anytime.)"
-        bot.send_button_message(recipient_id, welcome_text, buttons[:-1])
+        bot.send_button_message(
+            recipient_id,
+            "Hey there! I'm PX bot. How can I help you? (To exit, you can type 'Bye' anytime.)",
+            buttons[:-1],
+        )
     elif payload == "price summary":
-        summary_prompt = "Type the name of a product you're interested in."
-        bot.send_text_message(recipient_id, summary_prompt)
+        bot.send_text_message(
+            recipient_id, "Type the name of a product you're interested in."
+        )
     elif payload == "price alert":
-        alert_prompt = "Which product do you want me to track?\n\nPro tip: Browse the Exchange and share the link with me via Messenger."
-        bot.send_button_message(recipient_id, alert_prompt, [buttons[0]])
-    # elif payload == "exit":
-    #     exit_message = "If you need me again, simply type 'Hey' to wake me up!"
-    #     bot.send_text_message(recipient_id, exit_message)
+        bot.send_button_message(
+            recipient_id,
+            """Which product do you want me to track?\n\n
+            Pro tip: Browse the Exchange and share the link with me via Messenger.""",
+            [buttons[0]],
+        )
     elif payload == "stop track":
         send_item_buttons(recipient_id)
     else:
@@ -135,17 +140,9 @@ def received_link(message, recipient_id):
     if dev:
         print(url)
     item = get_item(url)
-    confirmation = f"I'll let you know when {item.title} gets cheaper!"
-    bot.send_button_message(recipient_id, confirmation, buttons[1:])
-    user = get_user(recipient_id)
-    item.users.append(user)
-    db.session.commit()
-
-
-def test_received_link(url, recipient_id):
-    item = get_item(url)
-    confirmation = f"I'll let you know when {item.title} gets cheaper!"
-    bot.send_button_message(recipient_id, confirmation, buttons[1:])
+    bot.send_button_message(
+        recipient_id, f"I'll let you know when {item.title} gets cheaper!", buttons[1:]
+    )
     user = get_user(recipient_id)
     item.users.append(user)
     db.session.commit()
