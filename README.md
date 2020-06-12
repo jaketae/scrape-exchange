@@ -45,13 +45,13 @@ v.2020.03.3X:
 v.2020.06.0X:
 * Reorganize DB schema from a single table to a many-to-many model
 * Make full use of `flask-sqlalchemy` for full-fledged price tracking
-* Use GitHub Actions for DB update cron job
+* Use GitHub Actions for DB update cron job and lint check
 * MVP release!
 
 
 ## Contributing
 
-Please feel free to submit an issue or a pull request, should you find any bugs or rooms for improvement. The code style is dictated by [black](https://pypi.org/project/black/#installation-and-usage). 
+Please feel free to submit an issue or a pull request. The code style is dictated by [black](https://pypi.org/project/black/#installation-and-usage), and is checked for by the CI.
 
 
 ## Example
