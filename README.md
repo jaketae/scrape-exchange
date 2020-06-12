@@ -1,6 +1,6 @@
 # PX Exchange Chatbot
 
-![Update database](https://github.com/jaketae/scrape-exchange/workflows/Update%20database/badge.svg) ![Run linter](https://github.com/jaketae/scrape-exchange/workflows/Run%20linter/badge.svg)
+![build](https://github.com/jaketae/scrape-exchange/workflows/Run%20linter/badge.svg) ![cron](https://github.com/jaketae/scrape-exchange/workflows/Update%20database/badge.svg) 
 
 https://web.facebook.com/pxpricebot/
 
