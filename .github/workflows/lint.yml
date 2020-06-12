@@ -20,7 +20,7 @@ jobs:
         pip install black
     - name: Lint
       run: |
-        black . --check --diff --exclude /(\.md|\.yml|\.png|\.txt)/
+        black . --check --diff --exclude '/(*.md|*.yml|*.png|*.txt)/'
 #     - name: Test with pytest
 #       run: |
 #         pytest
