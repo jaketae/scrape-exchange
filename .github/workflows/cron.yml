@@ -22,4 +22,4 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           VERIFY_TOKEN: ${{ secrets.VERIFY_TOKEN }}
         run: |
-          python app/cron.py
+          python cron.py

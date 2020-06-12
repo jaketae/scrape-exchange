@@ -26,6 +26,8 @@ buttons = [
     {"type": "postback", "title": "Stop price tracking", "payload": "stop track"},
 ]
 
+dev = True
+
 
 @app.route("/", methods=["GET"])
 def verify():
@@ -87,12 +89,14 @@ def send_item_buttons(messenger_id):
         buttons = []
         message = "Which item(s) do you want me to stop tracking?"
         for i, item in enumerate(items):
-            print(item.title)
+            if dev:
+                print(item.title)
             buttons.append(
                 {"type": "postback", "title": item.title, "payload": item.title}
             )
             if i % 3 == 2:
-                print(buttons)
+                if dev:
+                    print(buttons)
                 bot.send_button_message(messenger_id, message, buttons)
                 buttons = []
                 message = ""
@@ -128,7 +132,8 @@ def received_text(message, recipient_id):
 
 def received_link(message, recipient_id):
     url = message["message"]["attachments"][0]["payload"]["url"]
-    print(url)
+    if dev:
+        print(url)
     item = get_item(url)
     confirmation = f"I'll let you know when {item.title} gets cheaper!"
     bot.send_button_message(recipient_id, confirmation, buttons[1:])
