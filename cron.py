@@ -3,6 +3,8 @@ from app.crawler import get_item_info
 from app.models import *
 from app.routes import bot
 
+dev = False
+
 
 def cron_job():
     for item in db.session.query(Item).all():
@@ -12,9 +14,9 @@ def cron_job():
             db.session.commit()
             for user in item.users:
                 alert_user(user.messenger_id, item)
-        else:
+        elif dev:
             for user in item.users:
-                inform_user(user.messenger_id, item.title)
+                inform_user(user.messenger_id, item.title, item.price)
 
 
 def alert_user(messenger_id, item):
@@ -24,8 +26,8 @@ def alert_user(messenger_id, item):
     bot.send_text_message(messenger_id, message)
 
 
-def inform_user(messenger_id, item_title):
-    message = f"No price changes for {item_title} for now!"
+def inform_user(messenger_id, item_title, item_price):
+    message = f"No price changes, {item_title} is still ${item_price}!"
     bot.send_text_message(messenger_id, message)
 
 
