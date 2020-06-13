@@ -63,9 +63,7 @@ def received_postback(message, recipient_id):
     payload = message["postback"]["payload"]
     if payload == "get started":
         bot.send_button_message(
-            recipient_id,
-            "Hey there! I'm PX bot. How can I help you? (To exit, you can type 'Bye' anytime.)",
-            buttons[:-1],
+            recipient_id, "Hey there! I'm PX bot. How can I help you?", buttons[:-1],
         )
     elif payload == "price summary":
         bot.send_text_message(
@@ -94,22 +92,18 @@ def send_item_buttons(messenger_id):
             messenger_id, "You haven't asked me to track anything yet."
         )
     else:
-        buttons = []
-        message = "Which item(s) do you want me to stop tracking?"
-        for i, item in enumerate(items):
-            if dev:
-                print(item.title)
-            buttons.append(
-                {"type": "postback", "title": item.title, "payload": item.title}
-            )
-            if i % 3 == 2:
-                if dev:
-                    print(buttons)
-                bot.send_button_message(messenger_id, message, buttons)
-                buttons = []
-                message = ""
-        if buttons:
-            bot.send_button_message(messenger_id, message, buttons)
+        buttons = [
+            {"type": "postback", "title": item.title, "payload": item.title}
+            for item in items
+        ]
+        split_buttons = [buttons[i : i + 3] for i in range(0, len(buttons), 3)]
+        for i, split in enumerate(split_buttons):
+            if i == 0:
+                bot.send_button_message(
+                    messenger_id, "Which item do you want me to stop tracking?", split
+                )
+            else:
+                bot.send_button_message(messenger_id, "Here's the rest.", split)
 
 
 def stop_track(messenger_id, item_title):
@@ -133,21 +127,24 @@ def received_text(message, recipient_id):
     elif "bye" in text.lower():
         exit_message = "If you need me again, simply type 'Hey' to wake me up!"
         bot.send_text_message(recipient_id, exit_message)
+        func = request.environ.get("werkzeug.server.shutdown")
+        func()
     else:
         bot.send_text_message(recipient_id, get_summary(text))
         bot.send_button_message(recipient_id, "What next?", buttons[1:])
 
 
-def received_link(message, recipient_id):
+def received_link(message, messenger_id):
     url = message["message"]["attachments"][0]["payload"]["url"]
     if dev:
         print(url)
     item = get_item(url)
     bot.send_button_message(
-        recipient_id, f"I'll let you know when {item.title} gets cheaper!", buttons[1:]
+        messenger_id,
+        f"I'll message you when {item.title} gets cheaper than the current {item.price}!",
+        buttons[1:],
     )
-    user = get_user(recipient_id)
-    item.users.append(user)
+    item.users.append(get_user(messenger_id))
     db.session.commit()
 
 
