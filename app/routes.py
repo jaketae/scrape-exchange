@@ -51,8 +51,11 @@ def respond():
                 else:
                     received_link(message, recipient_id)
             else:
-                error_message = "Sorry, I don't understand that. Other way I can help?"
-                bot.send_button_message(recipient_id, error_message, buttons[:-1])
+                bot.send_button_message(
+                    recipient_id,
+                    "Sorry, I don't understand that. Other way I can help?",
+                    buttons[:-1],
+                )
     return "Message processed"
 
 
@@ -71,8 +74,8 @@ def received_postback(message, recipient_id):
     elif payload == "price alert":
         bot.send_button_message(
             recipient_id,
-            """Which product do you want me to track?\n\n
-            Pro tip: Browse the Exchange and share the link with me via Messenger.""",
+            "Which product do you want me to track?\n\n\
+            Pro tip: Browse the Exchange and share the link with me via Messenger.",
             [buttons[0]],
         )
     elif payload == "stop track":
@@ -162,6 +165,8 @@ def get_item(url):
     query_result = db.session.query(Item).filter_by(url=url).first()
     if query_result:
         return query_result
+    if dev:
+        print(url)
     title, price, url = get_item_info(url)
     item = Item(title=title, price=price, url=url)
     db.session.add(item)
