@@ -4,11 +4,15 @@ import bs4
 from app.utils import check_num, floatify, parse, redirect, stringify
 
 
-def get_item_info(url):
+def make_soup(url):
     url = redirect(url)
     page = requests.get(url)
-    soup = bs4.BeautifulSoup(page.text, "lxml")
-    title = soup.find("h1", class_="aafes-page-head mb-0").text
+    return bs4.BeautifulSoup(page.text, "lxml")
+
+
+def get_item_info(url):
+    soup = make_soup(url)
+    title = get_title(soup)
     item = soup.find("div", {"class": "aafes-pdp-price mt-1 jsRenderedPrice"})
     try:
         price = "".join(
@@ -30,7 +34,17 @@ def get_item_info(url):
                     "span", {"class": "aafes-price-list"}
                 ).text.strip()
                 price = check_num(raw_price[raw_price.find("$") :])
-    return title, floatify(price), url
+    return title, floatify(price), redirect(url)
+
+
+def get_title(soup):
+    try:
+        return soup.find("h1", class_="aafes-page-head mb-0").text.strip()
+    except AttributeError:
+        try:
+            return soup.find("h1", class_="aafes-page-head").text.strip()
+        except AttributeError:
+            return soup.find("h1", class_="mb-0").text.strip()
 
 
 def scrape_names(soup):
@@ -70,9 +84,9 @@ def scrape_prices(soup):
 
 
 def get_summary(keyword):
-    url = f"https://www.shopmyexchange.com/s?Dy=1&Nty=1&Ntt={parse(keyword)}"
-    page = requests.get(url)
-    soup = bs4.BeautifulSoup(page.text, "lxml")
+    soup = make_soup(
+        f"https://www.shopmyexchange.com/s?Dy=1&Nty=1&Ntt={parse(keyword)}"
+    )
     names = scrape_names(soup)
     prices = scrape_prices(soup)
     return stringify(names, prices)

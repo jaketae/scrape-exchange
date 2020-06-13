@@ -1,7 +1,5 @@
 import requests
 
-import bs4
-
 
 def parse(keyword):
     return str(keyword).replace(" ", "+")
