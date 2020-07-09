@@ -10,7 +10,7 @@ def stringify(names, prices):
         return "There are no results to show."
     summary = ""
     for name, price in zip(names, prices):
-        assert price[0] == "$"
+        # assert price[0] == "$"
         summary += f"{name}: {price}\n\n"
     if len(summary) == 0:
         return "There are no results to show."
