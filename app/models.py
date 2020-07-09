@@ -2,8 +2,12 @@ from app import db
 
 track = db.Table(
     "track",
-    db.Column("user_id", db.Integer, db.ForeignKey("user.id"), primary_key=True),
-    db.Column("item_id", db.Integer, db.ForeignKey("item.id"), primary_key=True),
+    db.Column(
+        "user_id", db.Integer, db.ForeignKey("user.id"), primary_key=True
+    ),
+    db.Column(
+        "item_id", db.Integer, db.ForeignKey("item.id"), primary_key=True
+    ),
 )
 
 

@@ -1,7 +1,6 @@
 import os
 
 import requests
-
 from app import app
 from app.crawler import get_item_info, get_summary
 from app.models import Item, User, db, track
@@ -20,10 +19,22 @@ buttons = [
         "url": "https://www.shopmyexchange.com",
         "title": "Browse the Exchange",
     },
-    {"type": "postback", "title": "Check out item price", "payload": "price summary"},
-    {"type": "postback", "title": "Set up price alert", "payload": "price alert"},
+    {
+        "type": "postback",
+        "title": "Check out item price",
+        "payload": "price summary",
+    },
+    {
+        "type": "postback",
+        "title": "Set up price alert",
+        "payload": "price alert",
+    },
     # {"type": "postback", "title": "Exit conversation", "payload": "exit"},
-    {"type": "postback", "title": "Stop price tracking", "payload": "stop track"},
+    {
+        "type": "postback",
+        "title": "Stop price tracking",
+        "payload": "stop track",
+    },
 ]
 
 dev = True
@@ -63,7 +74,9 @@ def received_postback(message, recipient_id):
     payload = message["postback"]["payload"]
     if payload == "get started":
         bot.send_button_message(
-            recipient_id, "Hey there! I'm PX bot. How can I help you?", buttons[:-1],
+            recipient_id,
+            "Hey there! I'm PX bot. How can I help you?",
+            buttons[:-1],
         )
     elif payload == "price summary":
         bot.send_text_message(
@@ -86,7 +99,12 @@ def received_postback(message, recipient_id):
 
 
 def send_item_buttons(messenger_id):
-    items = db.session.query(User).filter_by(messenger_id=messenger_id).first().items
+    items = (
+        db.session.query(User)
+        .filter_by(messenger_id=messenger_id)
+        .first()
+        .items
+    )
     if len(items) == 0:
         bot.send_text_message(
             messenger_id, "You haven't asked me to track anything yet."
@@ -100,10 +118,14 @@ def send_item_buttons(messenger_id):
         for i, split in enumerate(split_buttons):
             if i == 0:
                 bot.send_button_message(
-                    messenger_id, "Which item do you want me to stop tracking?", split
+                    messenger_id,
+                    "Which item do you want me to stop tracking?",
+                    split,
                 )
             else:
-                bot.send_button_message(messenger_id, "Here's the rest.", split)
+                bot.send_button_message(
+                    messenger_id, "Here's the rest.", split
+                )
 
 
 def stop_track(messenger_id, item_title):
@@ -149,7 +171,9 @@ def received_link(message, messenger_id):
 
 
 def get_user(messenger_id):
-    query_result = db.session.query(User).filter_by(messenger_id=messenger_id).first()
+    query_result = (
+        db.session.query(User).filter_by(messenger_id=messenger_id).first()
+    )
     if query_result:
         return query_result
     user = User(messenger_id=messenger_id)

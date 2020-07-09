@@ -1,7 +1,7 @@
 import pytest
-import requests
 
 import bs4
+import requests
 
 
 def test_get_item_info():
@@ -34,8 +34,12 @@ def _build_soup(url):
     return bs4.BeautifulSoup(page.text, "lxml")
 
 
-soup_1 = _build_soup("https://www.shopmyexchange.com/s?Dy=1&Nty=1&Ntt=iPad+pro")
-soup_2 = _build_soup("https://www.shopmyexchange.com/s?Dy=1&Nty=1&Ntt=samsung+tv")
+soup_1 = _build_soup(
+    "https://www.shopmyexchange.com/s?Dy=1&Nty=1&Ntt=iPad+pro"
+)
+soup_2 = _build_soup(
+    "https://www.shopmyexchange.com/s?Dy=1&Nty=1&Ntt=samsung+tv"
+)
 soup_3 = _build_soup("https://www.shopmyexchange.com/s?Dy=1&Nty=1&Ntt=rolex")
 
 

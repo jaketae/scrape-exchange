@@ -20,7 +20,7 @@ jobs:
         pip install -r requirements.txt
     - name: Lint
       run: |
-        black . --check --diff --exclude '/(\.md|\.yml|\.png|\.txt)/'
+        black . -l 79 --check --diff --exclude '/(\.md|\.yml|\.png|\.txt)/'
     - name: Test
       env:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}

@@ -1,6 +1,5 @@
-import requests
-
 import bs4
+import requests
 from app.utils import check_num, floatify, parse, redirect, stringify
 
 
@@ -23,7 +22,9 @@ def get_item_info(url):
         )
     except:
         try:
-            price = check_num(item.find("div", {"class": "aafes-price"}).text.strip())
+            price = check_num(
+                item.find("div", {"class": "aafes-price"}).text.strip()
+            )
         except:
             try:
                 price = check_num(
@@ -75,7 +76,9 @@ def scrape_prices(soup):
             except:
                 try:
                     price = check_num(
-                        item.find("div", {"class": "aafes-price-sm"}).text.strip()
+                        item.find(
+                            "div", {"class": "aafes-price-sm"}
+                        ).text.strip()
                     )
                 except:
                     price = "None"

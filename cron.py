@@ -20,9 +20,7 @@ def cron_job():
 
 
 def alert_user(messenger_id, item):
-    message = (
-        f"Price of {item.title} has dropped to ${item.price}! Checkout at {item.url}."
-    )
+    message = f"Price of {item.title} has dropped to ${item.price}! Checkout at {item.url}."
     bot.send_text_message(messenger_id, message)
 
 
