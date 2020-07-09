@@ -23,11 +23,14 @@ def test_floatify():
 def test_stringify():
     from app.utils import stringify
 
-    with pytest.raises(AssertionError):
-        stringify(["ipad", "airpods"], ["10", "10"])
+    assert (
+        stringify(["ipad", "airpods"], ["some text", "some text"])
+        == "ipad: Price not available\n\nairpods: Price not available\n"
+    )
     assert stringify([], []) == "There are no results to show."
     assert (
-        stringify(["ipad", "airpods"], ["$10", "$10"]) == "ipad: $10\n\nairpods: $10\n"
+        stringify(["ipad", "airpods"], ["$10", "$10"])
+        == "ipad: $10\n\nairpods: $10\n"
     )
 
 
