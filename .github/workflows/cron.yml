@@ -1,7 +1,7 @@
 name: Update database
-on:
-  schedule:
-    - cron:  '* * */2 * *'
+on: push
+  # schedule:
+  #   - cron:  '* * */2 * *'
 jobs:
   update:
     runs-on: ubuntu-latest
