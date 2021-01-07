@@ -2,6 +2,6 @@ beautifulsoup4==4.8.2
 Flask==1.1.1
 flask-sqlalchemy==2.4.1
 gunicorn==20.0.4
-lxml==4.5.0
+lxml==4.6.2
 psycopg2==2.8.4
 pymessenger==0.0.7.0
